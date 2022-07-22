@@ -6,57 +6,42 @@ import User from '../models/user';
 
 
 export const validateJwt = async(req:Request, res:Response, next: NextFunction) => {
-    /**
-      * Leer el token en los headers
-    */ 
+    /** Read token in the headers */
     const token = req.header('x-token');
     if(!token){
-      /**
-       * 401 no authorization 
-      */  
+      /** 401 no authorization */
      return res.status(401).json({
-         msg: 'No hay token en la petición'
+         msg: 'No token in the request'
      })
     }
 
    try {
-    /**
-     * Verificar si el token es válido
-    */
-    interface Person {
-      id: string  
-    }
-
-    /** return {id, iat, exp} */
+    /** Verify if token is valid */
     let privateKey:any = process.env.SECRET_OR_PRIVATE_KEY;
     const dataReturn:any = jwt.verify(token, privateKey);
 
     /** id dataReturn */
     const { id } = dataReturn;
 
-    /**
-     * Leer el usuario que corresponde al id;
-    */
-    const user = await User.findById(id);
+    /** Read the user that corresponds to the id */
+    const user:any = await User.findById(id);
     if(!user){
       return res.status(401).json({
-        msg: 'Token no válido - usuario no existe en la DB'  
+        msg: 'There are not users in DB / token no valid'  
       })  
     }
-    /**
-     * Verificar s el uid tiene state ture
-    */
+    /** Verify is id have state true */
     if(!user.state){
       return res.status(401).json({
-        msg: 'Token no válido - usuario con state:false'  
+        msg: 'Token no valid - user with state:false'  
       })  
     }
-    // req.user = user;
+    /* req.user = user; */
     next();
 
    } catch (err) {
       res.status(401).json({
-        msg: 'Token no válido'  
+        msg: 'Token no valid'  
       }) 
    } 
 }

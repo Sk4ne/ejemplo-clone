@@ -2,19 +2,13 @@ import User from '../models/user'
 import { Request,Response,NextFunction } from 'express'
 import bcrypt from 'bcryptjs'
 
+
+
 export const addUser = async(req:Request, res:Response, next:NextFunction) => {
   try{
     const body:any = req.body;
-    const { email } = req.body;
-    // Exist email
-    const existEmail = await User.findOne({ email });
-    if(existEmail){
-      return res.status(404).json({
-        message: 'El correo ya esta registrado'
-      })
-    }
     /* Encrypt password */
-    const salt:string = bcrypt.genSaltSync();
+    const salt:string = bcrypt.genSaltSync(10);
     body.password = bcrypt.hashSync(body.password,salt);
     const user = await User.create(body);
     res.status(200).json(user);
@@ -84,6 +78,20 @@ export const deleteUser = async(req: Request, res: Response, next: NextFunction)
     await User.findByIdAndDelete(id); 
     res.status(200).json({
       message: 'User delete successfully'
+    })
+  }catch(err){
+    res.status(500).json({
+      message: `An error ocurred ${err}`
+    })
+    next(err)
+  }
+}
+
+export const deleteAllUsers = async(req:Request,res:Response,next:NextFunction) => {
+  try{
+    await User.deleteMany({})
+    res.status(200).json({
+      msg:'All user was deleted successfully'
     })
   }catch(err){
     res.status(500).json({

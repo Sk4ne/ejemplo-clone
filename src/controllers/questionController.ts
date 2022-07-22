@@ -8,6 +8,22 @@
 import Question from '../models/question'
 import { Request, Response, NextFunction } from 'express'
 
+/* const removeSubQuestion = async() => {
+  let elemDelete:any = await Question.updateOne(
+    {_id:'62d5c94ea047965d0f187643','question._id':'62d5c94ea047965d0f187644'},
+    {
+      $unset:{
+        'question.$._id':'',
+        'question.$.titleQuestion':'',
+        'question.$.typeQuestion':'',
+        'question.$.answer':''
+      }
+    }
+  );
+  console.log(elemDelete);
+}
+
+removeSubQuestion() */
 export const addQuestion = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const body = req.body;
@@ -46,7 +62,7 @@ export const getQuestion = async (req: Request, res: Response, next: NextFunctio
   }
 }
 /** 
- * Function $push question to object array
+ * New Question
  * 
 */
 export const pushQuestion = async (req: Request, res: Response, next: NextFunction) => {
@@ -54,6 +70,9 @@ export const pushQuestion = async (req: Request, res: Response, next: NextFuncti
     let { idElement } = req.params;
     let { titleQuestion, typeQuestion, answer } = req.body;
 
+    if( !(typeQuestion === 'QUESTION_OPEN' || typeQuestion === 'MULTIPLE' ) ){
+      return res.status(404).json({msg:`${typeQuestion} is not typeQuestion valid :)`});
+    }
     /* Push to array-objet survey */
     await Question.updateOne(
       {_id:idElement },
@@ -150,7 +169,7 @@ export const deleteQuestion = async (req: Request, res: Response, next: NextFunc
 
 export const deleteAllQuestion = async(req:Request, res: Response, next:NextFunction) => {
   try{
-    await Question.remove({});
+    await Question.deleteMany({});
     res.status(200).json({msg:'All documents was deleted'})
   }catch(err){
     res.status(500).json({
