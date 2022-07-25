@@ -101,3 +101,17 @@ export const deleteAllUsers = async(req:Request,res:Response,next:NextFunction) 
   }
 }
 
+/* This function is for test. Update role of all document of collection user */
+
+export const updateDoc = async(req:Request,res:Response,next:NextFunction)=>{
+  try {
+    /* update all role user */
+    await User.updateMany({},{$set:{role:'ADMIN_ROLE'}});
+    res.status(200).json({msg:'All documents was updated'});
+  } catch (err) {
+    res.status(500).json({
+      message: `An error ocurred ${err}`
+    })
+    next(err)
+  }
+}

@@ -49,6 +49,8 @@
     // "outFile": "./",                                  /* Specify a file that bundles all outputs into one JavaScript file. If `declaration` is true, also designates a file that bundles all .d.ts output. */
     "outDir": "./dist",                                   /* Specify an output folder for all emitted files. */
     // /home/neider/Escritorio/go-ts/dist
+    /* CHANGE TO RESOLVE req.user */
+    "typeRoots": ["./node_modules/@types", "./src/types"],
 
     // "removeComments": true,                           /* Disable emitting comments. */
     // "noEmit": true,                                   /* Disable emitting files from a compilation. */

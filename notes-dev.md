@@ -9,6 +9,14 @@
 * Validamos el rol - creamos un archivos validar-roles.js (rol admin) carpeta middlewares
 * IMPORTAMOS EN LA CARPETA ROUTES los archivos de validaciones
 
+## Consideraciones Generales
+
+```js
+1. Todos los emails van a terminar con `86@correo.com` y la contraseña va a ser `A1s&23` - Fase Dev 
+2. El usuario con rol ADMIN_ROLE puede editar y eliminar sus propias encuestas. 
+3. El usuario sin privilegios USER_ROLE tiene permisos de lectura, solo puede ver las encuestas disponibles.
+```
+
 ## TASK
 - [x] Desintalar los paquetes que no se este usando
 - [x] Implementar express-validator en la ruta question.
@@ -19,8 +27,11 @@
 - [x] Validación de la contraseña
 - [x] Aplicar validaciones en la ruta
 - [x] Ruta login
-- [ ] Definir los roles de usuario  y el login.
+- [ ] Definir los roles de usuario - ADMIN
+- [ ] La api no me deja crear usarios en formato JSON desde POSTMAN.
+- [ ] Subir la imagen de los usuarios a cloudinary
+- [x] Img por defecto al crear un usuario
 - [x] Crear un ruta para eliminar todos los usuarios
 - [x] Validar que el usuario ingrese una contraseña segura
 - [x] Optimizar la validación de la contraseña
-- [ ] Img por defecto al crear un usuario
+

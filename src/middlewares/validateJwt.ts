@@ -36,7 +36,8 @@ export const validateJwt = async(req:Request, res:Response, next: NextFunction) 
         msg: 'Token no valid - user with state:false'  
       })  
     }
-    /* req.user = user; */
+    /* Store the user in the request, so we can use it later to validate the roles.  */
+    req.user = user; 
     next();
 
    } catch (err) {
