@@ -27,9 +27,10 @@
 - [x] Validación de la contraseña
 - [x] Aplicar validaciones en la ruta
 - [x] Ruta login
-- [ ] Definir los roles de usuario - ADMIN
+- [x] Definir los roles de usuario - ADMIN
 - [ ] La api no me deja crear usarios en formato JSON desde POSTMAN.
 - [ ] Subir la imagen de los usuarios a cloudinary
+- [x] Crear un index en la carpeta models para organizar mejor los archivos.
 - [x] Img por defecto al crear un usuario
 - [x] Crear un ruta para eliminar todos los usuarios
 - [x] Validar que el usuario ingrese una contraseña segura

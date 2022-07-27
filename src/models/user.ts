@@ -11,7 +11,7 @@ interface User extends mongoose.Document {
   email: string;
   password: string;
   /* img? is optional */
-  img?: string;
+  img: string;
   role: string;
   createAt: Date;
   state: boolean

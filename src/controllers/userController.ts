@@ -1,13 +1,14 @@
-import User from '../models/user'
+import { User } from '../models'
 import { Request,Response,NextFunction } from 'express'
 import bcrypt from 'bcryptjs'
+import '../upload/cloudinary'
+import { v2 as cloudinary } from 'cloudinary'
 
+/* addUser without image */
 
-
-export const addUser = async(req:Request, res:Response, next:NextFunction) => {
+/* export const addUser = async(req:Request, res:Response, next:NextFunction) => {
   try{
     const body:any = req.body;
-    /* Encrypt password */
     const salt:string = bcrypt.genSaltSync(10);
     body.password = bcrypt.hashSync(body.password,salt);
     const user = await User.create(body);
@@ -18,8 +19,26 @@ export const addUser = async(req:Request, res:Response, next:NextFunction) => {
     })
     next(err);
   }
-}
+} */
 
+
+export const addUser = async(req:Request,res:Response,next:NextFunction) =>{
+  try {
+    let body:any = req.body;
+    body.password = await bcrypt.hashSync(body.password,10);
+    let pathImage:any;
+    pathImage = await req.file?.path; 
+    const result = await cloudinary.uploader.upload(pathImage,{folder:'api-survey/'});
+    body.img = result.secure_url;
+    const user = await User.create(body); 
+    res.status(200).json({user});
+  } catch (err) {
+    res.status(500).send({
+      msg:`An ocurred error  ${err}`
+    }) 
+    next(err);
+  }
+}
 export const getUsers = async(req:Request, res: Response, next: NextFunction)=> {
   try {
     const users  = await User.find({});
