@@ -18,6 +18,7 @@
 ```
 
 ## TASK
+- [ ] Crear el repositorio de la API en GITLAB
 - [x] Desintalar los paquetes que no se este usando
 - [x] Implementar express-validator en la ruta question.
 - [x] Validar que se ingrese una typeQuestion Valid al hacer el push a un array de Question
@@ -28,11 +29,22 @@
 - [x] Aplicar validaciones en la ruta
 - [x] Ruta login
 - [x] Definir los roles de usuario - ADMIN
-- [ ] La api no me deja crear usarios en formato JSON desde POSTMAN.
-- [ ] Subir la imagen de los usuarios a cloudinary
+- [x] La api no me deja crear usuarios en formato JSON desde POSTMAN. SOLUCIONAR
+- [x] Subir la imagen de los usuarios a cloudinary - código optimizado
+- [x] Si no mando la imagen se queja el código el -file es required
+- [x] Eliminar imagenes de cloudinary cuando se elimina un usuario.
+- [x] Mover la imagen por default a la pantalla principal de cloudinary
+- [ ] Eliminar imagenes de cloudinary cuando se actualiza o elimina un usuario.
+- [x] Corregir el error que tira multer cuando actualizo un usuario y no paso la imágen.
+- [ ] Crear un módulo para reutilizar la eliminación de las imagenes 
+- [ ] Organizar las carpeta de la api en postman.
+- [x] Borrar de la DB los usuarios que no tienen la pass encriptada
 - [x] Crear un index en la carpeta models para organizar mejor los archivos.
-- [x] Img por defecto al crear un usuario
+- [x] Si un usuario no elige una imagen al registrarse se le asigna una por defecto.  VALIDAR
 - [x] Crear un ruta para eliminar todos los usuarios
 - [x] Validar que el usuario ingrese una contraseña segura
 - [x] Optimizar la validación de la contraseña
+- [x] Actualizar la contraseña.
+- [ ] Ver los vídeos de fazt y midudev sobre testing en node
+- [ ] Implementar passportjs para la autenticación con redes sociales.
 
