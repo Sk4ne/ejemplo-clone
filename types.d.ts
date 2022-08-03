@@ -11,6 +11,7 @@
 //   comment: string
 // }
 
+/** line 14  28 examples */
 export interface UserInfo {
   id:number;
   name:string;
@@ -24,4 +25,9 @@ export interface UserInfo {
 
 export interface imageUser {
   img:string; 
+}
+
+export interface UserData {
+  name:string | undefined;
+  role:string | undefined; 
 }

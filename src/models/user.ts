@@ -13,6 +13,7 @@ interface User extends mongoose.Document {
   /* img? is optional */
   img?: string;
   role: string;
+  facebook?:string
   createAt: Date;
   state: boolean
 }
@@ -23,6 +24,7 @@ const userSchema = new Schema({
   password: {type:  String},
   img:  {type:  String,default:'https://res.cloudinary.com/dqhme1rod/image/upload/v1657230171/xfzbvm7rlpapsoa0dndm.png'},
   role: {type:  String, enum: validRole, default: 'ADMIN_ROLE'},
+  facebook: {type: String, default:false},
   createAt: {type:  Date, default: Date.now()},
   state:  {type:  Boolean, default: true},
 },{versionKey:false})

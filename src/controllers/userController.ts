@@ -182,3 +182,30 @@ export const updateDoc = async(req:Request,res:Response,next:NextFunction)=>{
     next(err)
   }
 }
+
+/* Function to controle user no auth */
+export const noAuth = async(req:Request,res:Response,next:NextFunction)=>{
+  try {
+    res.json({
+      msg: 'No estas logueado, hazlo...'
+    })
+  } catch (err) {
+    res.status(500).json({
+      message: `An error ocurred ${err}`
+    })
+    next(err)
+  }
+}
+
+export const loginOk = async(req:Request,res:Response,next:NextFunction)=>{
+  try {
+    res.json({
+      msg: 'login ok...'
+    })
+  } catch (err) {
+    res.status(500).json({
+      message: `An error ocurred ${err}`
+    })
+    next(err)
+  }
+}

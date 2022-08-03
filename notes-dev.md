@@ -16,6 +16,7 @@
 2. El usuario con rol ADMIN_ROLE puede editar y eliminar sus propias encuestas. 
 3. El usuario sin privilegios USER_ROLE tiene permisos de lectura, solo puede ver las encuestas disponibles.
 ```
+NOTA: Tengo que implementar una pasarela de pago ya sea epayco o payu en uno de mis proyectos
 
 ## TASK
 - [ ] Crear el repositorio de la API en GITLAB
@@ -34,10 +35,10 @@
 - [x] Si no mando la imagen se queja el código el -file es required
 - [x] Eliminar imagenes de cloudinary cuando se elimina un usuario.
 - [x] Mover la imagen por default a la pantalla principal de cloudinary
-- [ ] Eliminar imagenes de cloudinary cuando se actualiza o elimina un usuario.
+- [x] Eliminar imagenes de cloudinary cuando se actualiza o elimina un usuario.
 - [x] Corregir el error que tira multer cuando actualizo un usuario y no paso la imágen.
-- [ ] Crear un módulo para reutilizar la eliminación de las imagenes 
-- [ ] Organizar las carpeta de la api en postman.
+- [x] Organizar las carpeta de la API en POSTMAN
+- [x] Crear la documentación de la API en POSTMAN
 - [x] Borrar de la DB los usuarios que no tienen la pass encriptada
 - [x] Crear un index en la carpeta models para organizar mejor los archivos.
 - [x] Si un usuario no elige una imagen al registrarse se le asigna una por defecto.  VALIDAR
@@ -45,6 +46,8 @@
 - [x] Validar que el usuario ingrese una contraseña segura
 - [x] Optimizar la validación de la contraseña
 - [x] Actualizar la contraseña.
+- [ ] Investigar acerca del manejo de entornos en nodejs - cross-env
+- [ ] Login con Facebook - Implement passportjs
 - [ ] Ver los vídeos de fazt y midudev sobre testing en node
 - [ ] Implementar passportjs para la autenticación con redes sociales.
 
