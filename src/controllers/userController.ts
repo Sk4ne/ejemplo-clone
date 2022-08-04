@@ -1,6 +1,6 @@
 import '../upload/cloudinary'
 import { User } from '../models'
-import { Request,Response,NextFunction } from 'express'
+import { Request,Response,NextFunction, request } from 'express'
 import bcrypt from 'bcryptjs'
 import { v2 as cloudinary } from 'cloudinary'
 import { imageUser } from '../../types'
@@ -201,6 +201,31 @@ export const loginOk = async(req:Request,res:Response,next:NextFunction)=>{
   try {
     res.json({
       msg: 'login ok...'
+    })
+  } catch (err) {
+    res.status(500).json({
+      message: `An error ocurred ${err}`
+    })
+    next(err)
+  }
+}
+
+export const googleSucess = async(req:Request,res:Response,next:NextFunction)=>{
+  try {
+    res.json({
+      msg: 'login google ok...'
+    })
+  } catch (err) {
+    res.status(500).json({
+      message: `An error ocurred ${err}`
+    })
+    next(err)
+  }
+}
+export const googleFailure = async(req:Request,res:Response,next:NextFunction)=>{
+  try {
+    res.json({
+      msg: 'Error...'
     })
   } catch (err) {
     res.status(500).json({

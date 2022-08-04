@@ -1,6 +1,6 @@
 ## Generador de Encuestas
 
-Este es una API llamada survey que permite generar encuestas, mediante el uso de preguntas abiertas o de opción múltiple. En este proyecto estoy poniendo en practica el conocimiento que adquiri en un curso de typescript que realice hace un par de meses y perfeccionando lo que he aprendido de `NodeJS`,el framework `express` y `MongoDB` en el transcurso de los dos años. En esta `API` he implementado lo siguiente:
+Esta es una API llamada survey que permite generar encuestas, mediante el uso de preguntas abiertas o de opción múltiple. En este proyecto estoy poniendo en practica el conocimiento que adquiri en un curso de typescript que realice hace un par de meses y perfeccionando lo que he aprendido de `NodeJS`,el framework `express` y `MongoDB` en el transcurso de los dos últimos años. En esta `API` he implementado lo siguiente:
 
 * `JWT` para la autenticación de usuarios y manejo de roles.
 * `Nodemailer` para la envío de correos desde el backend.
@@ -16,4 +16,9 @@ Este es una API llamada survey que permite generar encuestas, mediante el uso de
 
 ```
  npm install 
+```
+## Compilar ts
+
+```
+ npm run watch
 ```
