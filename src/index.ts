@@ -6,6 +6,7 @@ import morgan from 'morgan'
 import cors from 'cors'
 import session from 'express-session'
 import passport from 'passport'
+import './middlewares/authGoogle'
 // import strategies from '../src/middlewares/authFacebook'
 import router from './routes'
 const app = express();
@@ -30,6 +31,15 @@ app.use(express.urlencoded({ extended: true }));
 
 //MIDDLEWARES ROUTES
 app.use(router);
+/** midleware router google */
+app.use('/auth',passport.authenticate('sign-up-google',{
+  scope:[
+    "https://www.googleapis.com/auth/userinfo.profile",
+    "https://www.googleapis.com/auth/userinfo.email"
+  ],
+  session:false
+}),router);
+
 app.use(express.static('public'));
 const history = require('connect-history-api-fallback');
 app.use(history());

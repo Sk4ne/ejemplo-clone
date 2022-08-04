@@ -1,4 +1,5 @@
 import '../middlewares/authFacebook'
+import '../middlewares/authGoogle'
 import {parse, stringify, toJSON, fromJSON} from 'flatted';
 import { Request,Response, Router } from 'express'
 import { check } from 'express-validator'
@@ -11,6 +12,8 @@ import {
     deleteUser,
     getUser,
     getUsers,
+    googleSucess,
+    googleFailure,
     loginOk,
     noAuth,
     updateDoc,
@@ -61,39 +64,43 @@ router.delete('/all-users',/* validateJwt, validateFields, */deleteAllUsers)
 router.put('/update-doc',updateDoc)
 
 
-/** Facebook routes */
+/**
+ * Facebook
+ */
 /** This is the path that calls the login */
 router.get('/auth/facebook',passport.authenticate('sign-up-facebook',{scope:['email']}));
 /** Esta funcion se dispara cuando el usuario inicia sesión con su cuenta */
 router.get('/auth/facebook/login',
   passport.authenticate('sign-up-facebook', { failureRedirect: '/login' }),
-  function(req:Request, res:Response) {
-    console.log('ACCEDIMOS ...')
-    res.status(200).json({
-      req: stringify(req)
+  (req:Request, res:Response)=>{
+    res.json({
+      data: req.user 
     })
   });
 
-/**sign - in  */
-router.get('/auth/facebook/signin',passport.authenticate('sign-in-facebook',{session:true}),async(req:Request,res:Response)=>{
-  if(req.user){
-    // let token:any = await generateJWT(req.user.id);
-    return res.status(200).json({
-      user: req.user,
-      // token
-    })
-  }else{
-    res.json({
-      msg: ' Sign In'
-    })
-  }
-})
-
-/** Se llama esta ruta cuando el user no esta logueado */
 router.get('/login',noAuth)
 router.get('/login-ok',loginOk) 
 
-/** test facebook */
-// router.get('/auth/facebook/login',facebookLogin);
+/**
+ * Google
+ */
+router.get('/auth/google',passport.authenticate('sign-up-google',{scope:['email','profile']}));
+router.get('/auth/google/login',passport.authenticate('sign-up-google',{failureRedirect:'/auth/google/failure'}),
+(req:Request,res:Response)=>{
+  res.json({
+    data: req.user 
+  })
+})
+/* 
+router.get( '/auth/google/login',
+    passport.authenticate( 'sign-up-google', {
+        successRedirect: '/auth/google/success',
+        failureRedirect: '/auth/google/failure'
+})); 
+Router original
+*/
+
+router.get('/auth/google/success',googleSucess)
+router.get('/auth/google/failure',googleFailure)
 export default router;
 
