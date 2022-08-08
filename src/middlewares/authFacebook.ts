@@ -1,5 +1,5 @@
-import dotenv from 'dotenv'
-dotenv.config();
+/* import dotenv from 'dotenv'
+dotenv.config(); */
 import passport from 'passport'
 const FacebookStrategy = require('passport-facebook').Strategy;
 import { generateJWT } from '../helpers/generateJwt';
@@ -30,11 +30,20 @@ passport.use("sign-up-facebook", new FacebookStrategy({
      * Si existe un usuario autenticado con facebook:
      * Generar un token para el mismo
      */
-    const userReturn = await User.findOne({ email });
-    if (userReturn) {
-      const token = await generateJWT(userReturn.id);
+     
+    /**
+     *             CORREGIR 
+     * Tengo un error el código no sabe con que red social se logueo el user
+     * si encuentra un usuario sin importar de que red social sea lo retorna
+     * CORREGIR - URGENTE ...
+     * El navegador se queda pegado y no retorna la data pero si la guarda... 
+     */
+    const user = await User.findOne({ email });
+
+    if (user && user?.facebook===true) {
+      const token = await generateJWT(user.id);
       const userData = {
-        userReturn,
+        user,
         token
       }
       return cb(null, userData);
@@ -58,3 +67,4 @@ passport.use("sign-up-facebook", new FacebookStrategy({
   }
 )); 
 
+export default passport; 

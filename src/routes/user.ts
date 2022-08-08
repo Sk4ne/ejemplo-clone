@@ -1,7 +1,23 @@
+/*
+import passportFacebook from '../middlewares/authFacebook'
+import passportGoogle from '../middlewares/authGoogle'
+*/
 import '../middlewares/authFacebook'
 import '../middlewares/authGoogle'
+import session from 'express-session'
+import express from 'express'
+const app = express();
+
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: true }
+}))
+
+import passport from 'passport';
 import {parse, stringify, toJSON, fromJSON} from 'flatted';
-import { Request,Response, Router } from 'express'
+import { NextFunction, Request,Response, Router } from 'express'
 import { check } from 'express-validator'
 import { validateFields } from '../middlewares/validateFields';
 import { validateJwt } from '../middlewares/validateJwt';
@@ -12,9 +28,9 @@ import {
     deleteUser,
     getUser,
     getUsers,
-    googleSucess,
+    googleSuccess,
     googleFailure,
-    loginOk,
+    facebookSuccess,
     noAuth,
     updateDoc,
     updateUser
@@ -23,12 +39,11 @@ import { existEmail } from '../helpers/existEmailUser';
 import { validPass } from '../helpers/regexPass';
 import { userAdmin } from '../middlewares/validateRoles';
 import { storage } from '../middlewares/multerConfig';
-import passport from 'passport';
-import { generateJWT } from '../helpers/generateJwt';
-// import { facebookLogin } from '../services/authProviders';
+import { isLoggedIn }  from '../middlewares/isLogged';
 
 
 const router: Router = Router();
+
 
 /** 
  * validateJwt - Verify that a token is included in the request.  
@@ -67,19 +82,19 @@ router.put('/update-doc',updateDoc)
 /**
  * Facebook
  */
-/** This is the path that calls the login */
 router.get('/auth/facebook',passport.authenticate('sign-up-facebook',{scope:['email']}));
-/** Esta funcion se dispara cuando el usuario inicia sesión con su cuenta */
 router.get('/auth/facebook/login',
   passport.authenticate('sign-up-facebook', { failureRedirect: '/login' }),
   (req:Request, res:Response)=>{
-    res.json({
+    // res.redirect('/login-ok')
+    console.log('USER IS LOGGED IN',req.isAuthenticated())
+    return res.json({
       data: req.user 
     })
   });
 
 router.get('/login',noAuth)
-router.get('/login-ok',loginOk) 
+router.get('/login-ok',isLoggedIn, facebookSuccess) 
 
 /**
  * Google
@@ -87,20 +102,36 @@ router.get('/login-ok',loginOk)
 router.get('/auth/google',passport.authenticate('sign-up-google',{scope:['email','profile']}));
 router.get('/auth/google/login',passport.authenticate('sign-up-google',{failureRedirect:'/auth/google/failure'}),
 (req:Request,res:Response)=>{
-  res.json({
+  return res.json({
     data: req.user 
   })
 })
-/* 
-router.get( '/auth/google/login',
-    passport.authenticate( 'sign-up-google', {
-        successRedirect: '/auth/google/success',
-        failureRedirect: '/auth/google/failure'
-})); 
-Router original
-*/
 
-router.get('/auth/google/success',googleSucess)
-router.get('/auth/google/failure',googleFailure)
+router.get('/auth/google/success',isLoggedIn, googleSuccess);
+router.get('/auth/google/failure',googleFailure);
+
+
+/** 
+ * Logout facebook and google
+ */
+router.get('/logout',(req:Request,res:Response,next:NextFunction)=>{
+  req.session.destroy((err) => {
+    if (err) { return next(err); }
+    // res.redirect("/");
+    res.redirect('https://accounts.google.com/logout')
+  });
+})
+
+/**
+ * No logged In
+ */
+router.get('/',(req,res)=>{
+  res.send('You are not logged in');
+})
+
+
+
+
 export default router;
+
 

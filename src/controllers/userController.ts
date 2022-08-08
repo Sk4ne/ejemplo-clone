@@ -3,7 +3,7 @@ import { User } from '../models'
 import { Request,Response,NextFunction, request } from 'express'
 import bcrypt from 'bcryptjs'
 import { v2 as cloudinary } from 'cloudinary'
-import { imageUser } from '../../types'
+// import { imageUser } from '../../types'
 
 
 /* addUser without image */
@@ -197,10 +197,10 @@ export const noAuth = async(req:Request,res:Response,next:NextFunction)=>{
   }
 }
 
-export const loginOk = async(req:Request,res:Response,next:NextFunction)=>{
+export const facebookSuccess = async(req:Request,res:Response,next:NextFunction)=>{
   try {
-    res.json({
-      msg: 'login ok...'
+    return res.status(200).json({
+      user: req.user 
     })
   } catch (err) {
     res.status(500).json({
@@ -210,10 +210,11 @@ export const loginOk = async(req:Request,res:Response,next:NextFunction)=>{
   }
 }
 
-export const googleSucess = async(req:Request,res:Response,next:NextFunction)=>{
+export const googleSuccess = async(req:Request,res:Response,next:NextFunction)=>{
   try {
     res.json({
-      msg: 'login google ok...'
+      msg: 'login google ok...',
+      user: req.user 
     })
   } catch (err) {
     res.status(500).json({

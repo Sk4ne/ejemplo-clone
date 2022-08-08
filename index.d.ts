@@ -31,3 +31,8 @@ export interface UserData {
   name:string | undefined;
   role:string | undefined; 
 }
+
+/** this config is for req.session = null */
+interface CookieSessionRequest {
+  session: CookieSessionObject | null | undefined;
+}
