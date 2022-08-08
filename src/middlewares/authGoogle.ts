@@ -62,4 +62,3 @@ async(_req:Request, _accessToken:string, _refreshToken:string, profile:any, done
 }
 ));
 
-export default passport; 

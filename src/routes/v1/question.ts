@@ -1,5 +1,5 @@
 import { Router,Request,Response, NextFunction } from 'express'
-import {validateJwt } from '../middlewares/validateJwt'
+import {validateJwt } from '../../middlewares/validateJwt'
 import { check } from 'express-validator'
 
 
@@ -12,9 +12,9 @@ import {
     updateSubQuestion,
     pushQuestion,
     deleteAllQuestion,
-} from '../controllers/questionController'
-import { validateFields } from '../middlewares/validateFields';
-import { titleSurveyUn } from '../helpers/fieldQuestUnique';
+} from '../../controllers/questionController'
+import { validateFields } from '../../middlewares/validateFields';
+import { titleSurveyUn } from '../../helpers/fieldQuestUnique';
 
 const router: Router = Router();
 

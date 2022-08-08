@@ -66,5 +66,3 @@ passport.use("sign-up-facebook", new FacebookStrategy({
     }
   }
 )); 
-
-export default passport; 

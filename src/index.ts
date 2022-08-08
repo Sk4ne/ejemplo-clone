@@ -4,12 +4,13 @@ import './db/config'
 import passport from 'passport'
 './middlewares/authGoogle'
 './middlewares/authFacebook'
-import express, { Request,Response} from 'express'
+import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
 import session from 'express-session'
 
-import router from './routes'
+/** routes v1 */
+import router from './routes/v1'
 const app = express();
 
 app.use(session({
@@ -21,35 +22,23 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
-// passport.use('facebook',strategies.facebook);
 
 app.use(morgan('tiny'));
 app.use(cors());
 app.use(express.json());
 
-//application/x-www-form-urlencoded
+/**application/x-www-form-urlencoded */
 app.use(express.urlencoded({ extended: true }));
 
-//MIDDLEWARES ROUTES
-app.use(router);
-/** midleware router google */
-/* app.use(passport.authenticate('sign-up-facebook'))
-app.use(passport.authenticate('sign-up-google')) */
-/* app.use('/auth',passport.authenticate('sign-up-google',{
-  scope:[
-    "https://www.googleapis.com/auth/userinfo.profile",
-    "https://www.googleapis.com/auth/userinfo.email"
-  ],
-  session:false
-}),router); */
+/** Middlewares router */
+app.use('/v1',router);
 
 app.use(express.static('public'));
 const history = require('connect-history-api-fallback');
 app.use(history());
 
 
-// connection database
-
+/** Connection database */
 app.listen(process.env.PORT || 3000,()=>{
   console.log(`Listen on port ${process.env.PORT}`)  
 })
