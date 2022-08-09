@@ -35,11 +35,18 @@ router.post('/question',[
     .not().isEmpty()
 ],validateFields,addQuestion);
 
-router.put('/question/:id', updateQuestion);
+/* router.put('/question/:id', updateQuestion);
 router.put('/quest/:id',updateSubQuestion);
 router.delete('/question/:id', deleteQuestion);
 router.put('/push-question/:idElement',pushQuestion)
-router.delete('/question',deleteAllQuestion)
+router.delete('/question',deleteAllQuestion) */
+
+router
+  .put('/question/:id', updateQuestion)
+  .put('/quest/:id',updateSubQuestion)
+  .delete('/question/:id', deleteQuestion)
+  .put('/push-question/:idElement',pushQuestion)
+  .delete('/question',deleteAllQuestion);
 
 export default router;
 
