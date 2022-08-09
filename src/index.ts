@@ -16,10 +16,9 @@ import router from './routes/v1'
 './middlewares/isLoggedIn'
 
 const app = express();
-
 app.use(session({
-  name: 'myCookieName135',
-  keys: ['key1', 'key2']
+  name: process.env.NAME_COOKIE,
+  keys: ['key1','key2']
 }))
 
 app.use(passport.initialize());
