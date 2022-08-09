@@ -21,25 +21,13 @@ interface UserReturn {
 passport.use("sign-up-facebook", new FacebookStrategy({
   clientID: process.env.FACEBOOK_APP_ID,
   clientSecret: process.env.FACEBOOK_APP_SECRET,
-  callbackURL: "http://localhost:3000/auth/facebook/login",
+  callbackURL: "http://localhost:3000/v1/auth/facebook/login",
   profileFields: ['id', 'email', 'first_name', 'last_name']
 },
   async (accesToken: string, refreshToken: string, profile: any, cb: any) => {
     const { email, first_name }: UserReturn = profile._json;
-    /**
-     * Si existe un usuario autenticado con facebook:
-     * Generar un token para el mismo
-     */
-     
-    /**
-     *             CORREGIR 
-     * Tengo un error el código no sabe con que red social se logueo el user
-     * si encuentra un usuario sin importar de que red social sea lo retorna
-     * CORREGIR - URGENTE ...
-     * El navegador se queda pegado y no retorna la data pero si la guarda... 
-     */
-    const user = await User.findOne({ email });
 
+    const user = await User.findOne({ email });
     if (user && user?.facebook===true) {
       const token = await generateJWT(user.id);
       const userData = {
@@ -66,3 +54,5 @@ passport.use("sign-up-facebook", new FacebookStrategy({
     }
   }
 )); 
+
+export default passport; 
