@@ -1,23 +1,20 @@
+
 '../../middlewares/authFacebook'
 '../../middlewares/authGoogle'
-import session from 'express-session'
-import express from 'express'
-const app = express();
 
-app.use(session({
-  secret: 'keyboard cat',
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: true }
-}))
-
+import {Request,Response,NextFunction,Router} from 'express'
 import passport from 'passport';
-import {parse, stringify, toJSON, fromJSON} from 'flatted';
-import { NextFunction, Request,Response, Router } from 'express'
+
 import { check } from 'express-validator'
+
+import { isLoggedIn } from '../../middlewares/isLogged';
 import { validateFields } from '../../middlewares/validateFields';
 import { validateJwt } from '../../middlewares/validateJwt';
 import { login } from '../../controllers/auth'
+import { existEmail } from '../../helpers/existEmailUser';
+import { validPass } from '../../helpers/regexPass';
+import { userAdmin } from '../../middlewares/validateRoles';
+import { storage } from '../../middlewares/multerConfig';
 import {
     addUser,
     deleteAllUsers,
@@ -31,15 +28,8 @@ import {
     updateDoc,
     updateUser
 } from '../../controllers/userController';
-import { existEmail } from '../../helpers/existEmailUser';
-import { validPass } from '../../helpers/regexPass';
-import { userAdmin } from '../../middlewares/validateRoles';
-import { storage } from '../../middlewares/multerConfig';
-import { isLoggedIn }  from '../../middlewares/isLogged';
-
 
 const router: Router = Router();
-
 
 /** 
  * validateJwt - Verify that a token is included in the request.  
@@ -76,59 +66,44 @@ router.delete('/all-users',/* validateJwt, validateFields, */deleteAllUsers)
 router.put('/update-doc',updateDoc)
 
 
-/**
- * Facebook
- */
+/** Facebook */
 router.get('/auth/facebook',passport.authenticate('sign-up-facebook',{scope:['email']}));
 router.get('/auth/facebook/login',
-  passport.authenticate('sign-up-facebook', { failureRedirect: '/login' }),
+  passport.authenticate('sign-up-facebook', {failureRedirect: '/login' }),
   (req:Request, res:Response)=>{
-    // res.redirect('/login-ok')
-    console.log('USER IS LOGGED IN',req.isAuthenticated())
     return res.json({
       data: req.user 
     })
-  });
+  } );
 
 router.get('/login',noAuth)
-router.get('/login-ok',isLoggedIn, facebookSuccess) 
+router.get('/login-ok',facebookSuccess) 
 
-/**
- * Google
- */
+/** google  */
+router.get('/test',isLoggedIn,googleSuccess)
 router.get('/auth/google',passport.authenticate('sign-up-google',{scope:['email','profile']}));
 router.get('/auth/google/login',passport.authenticate('sign-up-google',{failureRedirect:'/auth/google/failure'}),
 (req:Request,res:Response)=>{
-  return res.json({
-    data: req.user 
-  })
+  res.redirect('/v1/test')
 })
-
-router.get('/auth/google/success',isLoggedIn, googleSuccess);
 router.get('/auth/google/failure',googleFailure);
 
-
-/** 
- * Logout facebook and google
- */
+/** logout google */
 router.get('/logout',(req:Request,res:Response,next:NextFunction)=>{
-  req.session.destroy((err) => {
-    if (err) { return next(err); }
-    // res.redirect("/");
-    res.redirect('https://accounts.google.com/logout')
+  /** req.logout() solo elimina la cookie no cierra la sesión completa de google */
+  req.logout((err)=>{
+    if(err){
+      return next(err);
+    }
   });
+  res.redirect('/v1/home')
 })
 
-/**
- * No logged In
- */
-router.get('/',(req,res)=>{
+/** No loggedIn */
+router.get('/home',(req:Request,res:Response)=>{
   res.send('You are not logged in');
 })
 
 
-
-
 export default router;
-
 
