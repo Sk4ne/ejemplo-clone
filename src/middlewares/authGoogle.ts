@@ -1,9 +1,4 @@
 import passport from 'passport'
-/**
- * I have a error using:  
- * import GoogleStrategy from 'passport-google-oauth2'
- * GoogleStrategy.Strategy
- */
 const GoogleStrategy = require('passport-google-oauth2').Strategy
 import { Request } from 'express'
 import { User } from '../models'
@@ -26,11 +21,11 @@ interface UserReturn {
 passport.use('sign-up-google',new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret:process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: "http://localhost:3000/auth/google/login",
+  callbackURL: process.env.CALLBACK_URL_LOCAL,
   passReqToCallback   : true
 },
 async(_req:Request, _accessToken:string, _refreshToken:string, profile:any, done:any)=>{
-  const {given_name,email/* ,picture  */}:UserReturn = profile._json;
+  const {given_name,email}:UserReturn = profile._json;
   let user = await User.findOne({email});
   if (user && user?.google===true) {
     const token = await generateJWT(user.id);
@@ -44,8 +39,6 @@ async(_req:Request, _accessToken:string, _refreshToken:string, profile:any, done
       name: given_name,
       email,
       password: ':)',
-      /** Se va a usar una imagen por defecto */
-     /*  img: picture, */
       google: true,
     }
     await User.create(dataUser), async function (err: any, user: any, res: Response) {
@@ -58,7 +51,7 @@ async(_req:Request, _accessToken:string, _refreshToken:string, profile:any, done
       return done(null, userDb);
     }
   } 
-  /* :) */
 }
 ));
 
+export default passport 
