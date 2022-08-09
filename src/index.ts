@@ -1,23 +1,25 @@
 import dotenv from 'dotenv'
 dotenv.config()
 import './db/config'
-import passport from 'passport'
+
 './middlewares/authGoogle'
 './middlewares/authFacebook'
+
+import passport from 'passport'
 import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
-import session from 'express-session'
+import session from 'cookie-session'
 
 /** routes v1 */
 import router from './routes/v1'
+'./middlewares/isLoggedIn'
+
 const app = express();
 
 app.use(session({
-  secret: 'keyboard cat',
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: true }
+  name: 'myCookieName135',
+  keys: ['key1', 'key2']
 }))
 
 app.use(passport.initialize());
