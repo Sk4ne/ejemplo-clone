@@ -3,26 +3,6 @@ import { User } from '../models'
 import { Request,Response,NextFunction, request } from 'express'
 import bcrypt from 'bcryptjs'
 import { v2 as cloudinary } from 'cloudinary'
-// import { imageUser } from '../../types'
-
-
-/* addUser without image */
-
-/* export const addUser = async(req:Request, res:Response, next:NextFunction) => {
-  try{
-    const body:any = req.body;
-    const salt:string = bcrypt.genSaltSync(10);
-    body.password = bcrypt.hashSync(body.password,salt);
-    const user = await User.create(body);
-    res.status(200).json(user);
-  }catch(err){
-    res.status(500).json({
-      message: `An error ocurred ${err}`
-    })
-    next(err);
-  }
-} */
-
 
 export const addUser = async(req:Request,res:Response,next:NextFunction) =>{
   try {
@@ -34,12 +14,12 @@ export const addUser = async(req:Request,res:Response,next:NextFunction) =>{
     /* If user don't choose an image. Add user with image by default */
     if(!pathImage){
       const user = await User.create(body);
-      res.status(200).json({user});
+      res.status(201).json({user});
     }else{
       const { secure_url } = await cloudinary.uploader.upload(pathImage,{folder:'api-survey/'});
       body.img = secure_url; 
       const user = await User.create(body); 
-      res.status(200).json({user});
+      res.status(201).json({user});
     }
   } catch (err) {
     res.status(500).send({
@@ -212,7 +192,7 @@ export const facebookSuccess = async(req:Request,res:Response,next:NextFunction)
 
 export const googleSuccess = async(req:Request,res:Response,next:NextFunction)=>{
   try {
-    res.json({
+    res.status(200).json({
       msg: 'login google ok...',
       user: req.user 
     })
