@@ -8,3 +8,5 @@ declare global {
     }
   }
 }
+type CookieSession = CookieSessionObject | null | undefined;  
+export { CookieSession }
