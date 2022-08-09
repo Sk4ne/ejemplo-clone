@@ -1,17 +1,4 @@
-/* AQUI DEFINO TODOS LOS TIPOS DE ESTE PAQUETE */
 
-// export type Weather = 'sunny' | 'rainy' | 'windy' |'storay'
-// export type Visibility = 'great' | 'good' | 'ok' |'poor'
-
-// export interface DiaryEntry {
-//   id:number
-//   date:string,
-//   weather:Weather
-//   visibility: Visibility
-//   comment: string
-// }
-
-/** line 14  28 examples */
 export interface UserInfo {
   id:number;
   name:string;
@@ -23,6 +10,7 @@ export interface UserInfo {
   state:boolean 
 }
 
+/** This lines are examples */
 export interface imageUser {
   img:string; 
 }
@@ -32,7 +20,6 @@ export interface UserData {
   role:string | undefined; 
 }
 
-/** this config is for req.session = null */
-interface CookieSessionRequest {
-  session: CookieSessionObject | null | undefined;
-}
+
+
+
