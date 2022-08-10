@@ -180,6 +180,7 @@ export const noAuth = async(req:Request,res:Response,next:NextFunction)=>{
 export const facebookSuccess = async(req:Request,res:Response,next:NextFunction)=>{
   try {
     return res.status(200).json({
+      msg:'Login ok facebook',
       user: req.user 
     })
   } catch (err) {
@@ -189,6 +190,22 @@ export const facebookSuccess = async(req:Request,res:Response,next:NextFunction)
     next(err)
   }
 }
+export const logoutFacebook = async(req:Request,res:Response,next:NextFunction)=>{
+  try {
+    req.logout((err)=>{
+      if(err){
+        return next(err);
+      }
+    });
+    res.redirect('/v1/home')
+  } catch (err) {
+    res.status(500).json({
+      message: `An error ocurred ${err}`
+    })
+    next(err)
+  }
+}
+
 
 export const googleSuccess = async(req:Request,res:Response,next:NextFunction)=>{
   try {
@@ -208,6 +225,21 @@ export const googleFailure = async(req:Request,res:Response,next:NextFunction)=>
     res.json({
       msg: 'Error...'
     })
+  } catch (err) {
+    res.status(500).json({
+      message: `An error ocurred ${err}`
+    })
+    next(err)
+  }
+}
+export const logoutGoogle = async(req:Request,res:Response,next:NextFunction)=>{
+  try {
+    req.logout((err)=>{
+      if(err){
+        return next(err);
+      }
+    });
+    res.redirect('/v1/home')
   } catch (err) {
     res.status(500).json({
       message: `An error ocurred ${err}`

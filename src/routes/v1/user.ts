@@ -26,7 +26,9 @@ import {
     facebookSuccess,
     noAuth,
     updateDoc,
-    updateUser
+    updateUser,
+    logoutFacebook,
+    logoutGoogle
 } from '../../controllers/userController';
 
 const router: Router = Router();
@@ -71,35 +73,27 @@ router.get('/auth/facebook',passport.authenticate('sign-up-facebook',{scope:['em
 router.get('/auth/facebook/login',
   passport.authenticate('sign-up-facebook', {failureRedirect: '/login' }),
   (req:Request, res:Response)=>{
-    return res.json({
-      data: req.user 
-    })
-  } );
+    res.redirect('/v1/facebook-ok')
+  });
 
 router.get('/login',noAuth)
-router.get('/login-ok',facebookSuccess) 
+router.get('/facebook-ok',facebookSuccess) 
 
 /** google  */
-router.get('/test',isLoggedIn,googleSuccess)
+router.get('/google-ok',isLoggedIn,googleSuccess)
 router.get('/auth/google',passport.authenticate('sign-up-google',{scope:['email','profile']}));
 router.get('/auth/google/login',passport.authenticate('sign-up-google',{failureRedirect:'/auth/google/failure'}),
 (req:Request,res:Response)=>{
-  res.redirect('/v1/test')
+  res.redirect('/v1/google-ok')
 })
 router.get('/auth/google/failure',googleFailure);
 
 /** logout google */
-router.get('/logout',(req:Request,res:Response,next:NextFunction)=>{
-  /** req.logout() solo elimina la cookie no cierra la sesión completa de google */
-  req.logout((err)=>{
-    if(err){
-      return next(err);
-    }
-  });
-  res.redirect('/v1/home')
-})
+router.get('/logout/google',logoutGoogle)
+/** logout facebook */
+router.get('/logout/facebook',logoutFacebook);
 
-/** No loggedIn */
+/** No loggedIn google & facebook*/
 router.get('/home',(req:Request,res:Response)=>{
   res.send('You are not logged in');
 })
