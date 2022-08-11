@@ -28,7 +28,7 @@ import {
     updateDoc,
     updateUser,
     logoutFacebook,
-    logoutGoogle
+    logoutGoogle,
 } from '../../controllers/userController';
 
 const router: Router = Router();
@@ -71,21 +71,22 @@ router.put('/update-doc',updateDoc)
 /** Facebook */
 router.get('/auth/facebook',passport.authenticate('sign-up-facebook',{scope:['email']}));
 router.get('/auth/facebook/login',
-  passport.authenticate('sign-up-facebook', {failureRedirect: '/login' }),
+  passport.authenticate('sign-up-facebook', {failureRedirect: '/v1/login' }),
   (req:Request, res:Response)=>{
     res.redirect('/v1/facebook-ok')
   });
 
 router.get('/login',noAuth)
-router.get('/facebook-ok',facebookSuccess) 
+router.get('/facebook-ok',isLoggedIn,facebookSuccess) 
 
 /** google  */
-router.get('/google-ok',isLoggedIn,googleSuccess)
 router.get('/auth/google',passport.authenticate('sign-up-google',{scope:['email','profile']}));
-router.get('/auth/google/login',passport.authenticate('sign-up-google',{failureRedirect:'/auth/google/failure'}),
+router.get('/auth/google/login',passport.authenticate('sign-up-google',{failureRedirect:'/v1/auth/google/failure'}),
 (req:Request,res:Response)=>{
   res.redirect('/v1/google-ok')
 })
+
+router.get('/google-ok',isLoggedIn,googleSuccess)
 router.get('/auth/google/failure',googleFailure);
 
 /** logout google */

@@ -13,7 +13,7 @@ import { Types } from "mongoose";
 export interface UserReturnGoogle {
   email:string;
   given_name:string;
-  provider:string;
+  provider?:string;
 } 
 
 export interface UserReturnFacebook {
@@ -27,6 +27,14 @@ export interface ProfileFacebook{
     email:string;
     first_name:string;
     last_name?:string; 
+  }
+}
+export interface ProfileGoogle{
+  _json:{
+    sub:string;
+    given_name:string;
+    email:string;
+    family_name?:string; 
   }
 }
 

@@ -43,12 +43,14 @@ NOTA: Tengo que implementar una pasarela de pago ya sea epayco o payu en uno de 
 - [x] Crear un index en la carpeta models para organizar mejor los archivos.
 - [x] Si un usuario no elige una imagen al registrarse se le asigna una por defecto.  VALIDAR
 - [x] Crear un ruta para eliminar todos los usuarios
+- [x] Usar any donde no quede más opción.
 - [x] Validar que el usuario ingrese una contraseña segura
 - [x] Optimizar la validación de la contraseña
 - [x] Actualizar la contraseña.
 - [x] Investigar acerca del manejo de entornos en nodejs - cross-env
 - [ ] Login con Facebook & Google - Implement passportjs
   - [x] Logout google
+  - [ ] Error al crear un usuario con Facebook 
   - [x] Verificar que se esten usando los código de respuesta correctamente en toda la API
 - [x] Usar la imagen por defecto que esta en cloudinary - no la que viene de FB y Google
 - [x] Versionar las rutas
