@@ -50,3 +50,15 @@ export interface UserFacebook{
   createAt: date,
   state: boolean
 }
+
+
+export interface QuestionObject{
+  [
+    {
+      _id: string | Types.ObjectId,
+      titleQuestion: string,
+      typeQuestion: string,
+      answer: string
+    }
+  ]
+}
