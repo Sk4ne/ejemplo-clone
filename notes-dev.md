@@ -48,12 +48,19 @@ NOTA: Tengo que implementar una pasarela de pago ya sea epayco o payu en uno de 
 - [x] Optimizar la validación de la contraseña
 - [x] Actualizar la contraseña.
 - [x] Investigar acerca del manejo de entornos en nodejs - cross-env
-- [ ] Login con Facebook & Google - Implement passportjs
+- [x] Login con Facebook & Google - Implement passportjs
   - [x] Logout google
-  - [ ] Error al crear un usuario con Facebook 
+  - [x] Error al crear un usuario con Facebook 
   - [x] Verificar que se esten usando los código de respuesta correctamente en toda la API
 - [x] Usar la imagen por defecto que esta en cloudinary - no la que viene de FB y Google
 - [x] Versionar las rutas
 - [x] El código no diferencia con que red social me logueo facebook o google...
-- [ ] Ver los vídeos de fazt y midudev sobre testing en node
+- [ ] Revisar a profundidad el modelo y controlador question, corregir lo que esta mal...
+- [ ] Cambiar el type any en el archivo helpers/fieldQuestUnique.ts
+- [ ] Implementar nodemailer para recuperar la contraseña...
+- [x] Estudiar como se documenta una APi en nodejs
+  - [x] Ver vídeos de Fatz- leifer Mendez 
+- [ ] Estudiar como testear una Api con jest y supertest 
+  - [ ] Ver vídeos de Fazt y midudev
+
 
