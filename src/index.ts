@@ -1,6 +1,11 @@
 import dotenv from 'dotenv'
 dotenv.config()
 import './db/config'
+/** swagger  */
+import swaggerUi from 'swagger-ui-express'
+import swaggerJsDoc from 'swagger-jsdoc'
+import { options } from './swaggerOptions'
+
 
 './middlewares/authGoogle'
 './middlewares/authFacebook'
@@ -31,8 +36,12 @@ app.use(express.json());
 /**application/x-www-form-urlencoded */
 app.use(express.urlencoded({ extended: true }));
 
+/** jsDocs */
+const specs = swaggerJsDoc(options);
 /** Middlewares router */
 app.use('/v1',router);
+/**swagger */
+app.use('/docs',swaggerUi.serve,swaggerUi.setup(specs));
 
 app.use(express.static('public'));
 const history = require('connect-history-api-fallback');

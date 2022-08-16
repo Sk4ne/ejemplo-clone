@@ -3,7 +3,7 @@ import uniqueValidator from 'mongoose-unique-validator';
 
 /* enum */
 const validTypeQuestion = {
-  values: ['QUESTION_OPEN','MULTIPLE'],
+  values: ['QUESTION_OPEN','QUESTION_MULTIPLE'],
   message: '{ VALUE } is not a type question valid'
 }
 
@@ -11,6 +11,7 @@ interface Question extends mongoose.Document{
    titleSurvey: string;
    description: string;
    question:[{
+     _id: any;
      titleQuestion: string;
      typeQuestion: string;
      answer: string;
@@ -31,7 +32,7 @@ const questionSchema = new Schema({
       enum: validTypeQuestion,
     },
     answer: {
-      type:String
+      type:String,default:''
     }
   }],
   createAt:{ type:Date,default: Date.now() },
