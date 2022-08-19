@@ -124,33 +124,37 @@ export const updateQuestion = async (req: Request, res: Response, next: NextFunc
 
 export const updateSubQuestion = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    /**
-     * ESTA ACTUALIZACIÓN NOS ES EFICIENTE PUES NO PERMITE RESPONDER UNA PREGUNTA EN PARTICULAR,
-     * ACTUALIZA LA PRIMERA PREGUNTA QUE ENCUENTRA VACIA.
-     */
     let { id } = req.params;
+    /** Paso como parametro el id de la pregunta que quiero responder */
+    let { idQuestion } = req.params; 
     let update = req.body;
     /** Obtengo todo el objeto por medio del findById de mongoose */
     let questionById = await Question.findById(id);
     /** Obtengo todo el array de preguntas */
     let questionEmbedded = questionById?.question;
     /** Retorno el primer objeto cuya pregunta sea un string vacio */
-    let result = questionEmbedded?.find((element)=>{
-      return element.answer === '';
+    /** variable result return undefined */
+    let result = questionEmbedded?.find(question=>{
+      return question._id === idQuestion;
     });
     /**
      * Recorro el array de objetos de preguntas y guardo en un array todos los IDS de las mismas.
      */
-
-    const idQuestion:string[] | undefined = questionEmbedded?.map((elem)=>{
+    const idQuestion2:string[] | undefined = questionEmbedded?.map((elem)=>{
       return elem._id;
     });
-
-    /** propiedad que el cliente ingresa en el body */
     let { answerClient } = req.body;
     let subQuestionUpdated;
-    if(idQuestion!== undefined){
-      subQuestionUpdated = await Question.updateOne({_id:id,'question._id':idQuestion[3]},{$set:{'question.$.answer':answerClient}})
+    if(idQuestion2!== undefined){
+      subQuestionUpdated = await Question.updateOne(
+        // {_id:id,'question._id':idQuestion2[3]},
+
+        /** By passing the question id as a parameter, i can update
+         * the qeustion answer dynamically
+         */
+        {_id:id,'question._id':idQuestion},
+        {$set:{'question.$.answer':answerClient}}
+      );
     }
     res.status(200).json({
       message: 'Question updated',
