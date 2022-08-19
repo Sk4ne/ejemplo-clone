@@ -37,7 +37,8 @@ router.post('/question',[
 
 router
   .put('/question/:id', updateQuestion)
-  .put('/sub-question/:id',updateSubQuestion)
+  /* .put('/sub-question/:id',updateSubQuestion) */
+  .put('/sub-question/:id/:idQuestion',updateSubQuestion)
   .delete('/question/:id', deleteQuestion)
   .put('/push-question/:idElement',pushQuestion)
   .delete('/question',deleteAllQuestion);
