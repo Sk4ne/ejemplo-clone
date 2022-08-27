@@ -30,6 +30,7 @@ import {
     logoutFacebook,
     logoutGoogle,
 } from '../../controllers/userController';
+import { changePassword, restorePassword } from '../../helpers/restorePass';
 
 const router: Router = Router();
 
@@ -189,6 +190,11 @@ router.post('/user/login',login)
  *                 
  */
 router.put('/user/:id', storage.single('img'),updateUser)
+
+/** This route is use to send one link to email user to restore password */
+router.post('/restore-password',restorePassword) 
+/** This route is use to add new password */
+router.post('/password-reset/:idUser',changePassword)
 
 router.delete('/user/:id',
   validateJwt,
