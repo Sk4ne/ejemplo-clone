@@ -4,25 +4,25 @@ import { check } from 'express-validator'
 
 
 import {
-    addQuestion,
-    deleteQuestion,
-    getQuestion,
-    getQuestions,
-    updateQuestion,
+    addSurvey,
+    deleteSurvey,
+    getSurvey,
+    getSurveys,
+    updateSurvey,
     updateSubQuestion,
     pushQuestion,
-    deleteAllQuestion,
-} from '../../controllers/questionController'
+    deleteAllSurvey,
+} from '../../controllers/surveyController'
 import { validateFields } from '../../middlewares/validateFields';
 import { titleSurveyUn } from '../../helpers/fieldQuestUnique';
 
 const router: Router = Router();
 
-router.get('/questions',getQuestions);
-router.get('/question/:id', getQuestion);
+router.get('/surveys',getSurveys);
+router.get('/survey/:id', getSurvey);
 
 /* check() is a middleware used to validate the incoming data as per the fields */
-router.post('/question',[
+router.post('/survey',[
   /* Verify that titleSurvey is unique */
   check('titleSurvey').custom(titleSurveyUn),
   check('titleSurvey','titleSurvey is required')
@@ -33,15 +33,15 @@ router.post('/question',[
     .not().isEmpty(),
   check('question.*.typeQuestion','typeQuestion is required')
     .not().isEmpty()
-],validateFields,addQuestion);
+],validateFields,addSurvey);
 
 router
-  .put('/question/:id', updateQuestion)
+  .put('/survey/:id', updateSurvey)
   /* .put('/sub-question/:id',updateSubQuestion) */
   .put('/sub-question/:id/:idQuestion',updateSubQuestion)
-  .delete('/question/:id', deleteQuestion)
+  .delete('/survey/:id', deleteSurvey)
   .put('/push-question/:idElement',pushQuestion)
-  .delete('/question',deleteAllQuestion);
+  .delete('/survey',deleteAllSurvey);
 
 export default router;
 

@@ -3,11 +3,11 @@
 import '../../middlewares/authFacebook'
 import '../../middlewares/authGoogle'
 import { Router } from 'express'
-import questionRouter from './question'
+import surveyRouter from './survey'
 import userRouter from './user'
 
 const router: Router = Router()
-router.use(questionRouter)
+router.use(surveyRouter)
 router.use(userRouter)
 
 

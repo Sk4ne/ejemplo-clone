@@ -7,7 +7,7 @@ const validTypeQuestion = {
   message: '{ VALUE } is not a type question valid'
 }
 
-interface Question extends mongoose.Document{
+interface Survey extends mongoose.Document{
    titleSurvey: string;
    description: string;
    question:[{
@@ -20,7 +20,7 @@ interface Question extends mongoose.Document{
    state:boolean;
 }
 
-const questionSchema = new Schema({
+const surveySchema = new Schema({
   titleSurvey: { type:String },
   description: { type:String},
   question: [{
@@ -41,12 +41,12 @@ const questionSchema = new Schema({
 
 
 /* Apply the uniqueValidator plugin to nameSchema */
-questionSchema.plugin(uniqueValidator);
-const Question = mongoose.model<Question>('Question',questionSchema);
+surveySchema.plugin(uniqueValidator);
+const Survey = mongoose.model<Survey>('Question',surveySchema);
 
-/* Apply the uniqueValidator plugin to questionSchema 
-questionSchema.plugin(uniqueValidator, {message: 'Error, expected {PATH} to be unique'});
+/* Apply the uniqueValidator plugin to surveySchema 
+surveySchema.plugin(uniqueValidator, {message: 'Error, expected {PATH} to be unique'});
 */
 
 
-export default Question;
+export default Survey;

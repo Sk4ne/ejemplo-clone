@@ -1,7 +1,7 @@
 import User from './user'
-import Question from './question'
+import Survey from './survey'
 
 export {
   User,
-  Question
+  Survey
 }

@@ -5,23 +5,15 @@
  III. module.exports = {..code}
  IV. export default {..code}
 ==================================*/
-import Question from '../models/question'
+import Survey from '../models/survey'
 import { Request, Response, NextFunction } from 'express'
 import { QuestionObject } from '../types';
 
-/**
- * Succesfully - /questions - GET
- * Successfully - /question/:id - GET ID 
- * Successfully - /question - POST
- * Successfully - /push-question/:id PUT - subQuestions 
- * Sucessfully - /question/:id - PUT 
- * Successfully - /question/:id - DELETE
- */
-export const addQuestion = async (req: Request, res: Response, next: NextFunction) => {
+export const addSurvey = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const body = req.body;
-    const question = await Question.create(body);
-    res.status(201).json(question);
+    const survey = await Survey.create(body);
+    res.status(201).json(survey);
   } catch (err) {
     res.status(500).json({
       message: `An error ocurred ${err}`
@@ -30,10 +22,10 @@ export const addQuestion = async (req: Request, res: Response, next: NextFunctio
   }
 }
 
-export const getQuestions = async (req: Request, res: Response, next: NextFunction) => {
+export const getSurveys = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const questions = await Question.find({});
-    res.status(200).json(questions);
+    const surveys = await Survey.find({});
+    res.status(200).json(surveys);
   } catch (err) {
     res.status(500).json({
       message: ` An error ocurred ${err}`
@@ -42,11 +34,11 @@ export const getQuestions = async (req: Request, res: Response, next: NextFuncti
   }
 }
 
-export const getQuestion = async (req: Request, res: Response, next: NextFunction) => {
+export const getSurvey = async (req: Request, res: Response, next: NextFunction) => {
   try {
     let { id } = req.params
-    const question = await Question.findById(id);
-    res.status(200).json(question);
+    const survey = await Survey.findById(id);
+    res.status(200).json(survey);
   } catch (err) {
     res.status(500).json({
       message: ` An error ocurred ${err}`
@@ -55,7 +47,7 @@ export const getQuestion = async (req: Request, res: Response, next: NextFunctio
   }
 }
 /** 
- * New Question
+ * Agregar una nueva pregunta al array de objetos questions
  * 
 */
 export const pushQuestion = async (req: Request, res: Response, next: NextFunction) => {
@@ -66,25 +58,7 @@ export const pushQuestion = async (req: Request, res: Response, next: NextFuncti
     if( !(typeQuestion === 'QUESTION_OPEN' || typeQuestion === 'QUESTION_MULTIPLE' ) ){
       return res.status(404).json({msg:`${typeQuestion} is not typeQuestion valid :)`});
     }
-    /* Push new question to array-object questions */
-    /**
-     * Push new question to array-object questions
-     * structure
-     * "survey":[
-     *  { 
-     *     "titleSurvey":"title",
-     *     "description":"Description survey"
-     *  },
-     *  "question":[
-     *     {
-     *       "titleQuestion":"titleQuestion",
-     *       "typeQuestion":"QUESTION_OPEN",
-     *       "answer":""   
-     *     } 
-     *  ]
-     * ]
-     */
-    await Question.updateOne(
+    await Survey.updateOne(
       {_id:idElement },
       {
         $push: {
@@ -95,7 +69,7 @@ export const pushQuestion = async (req: Request, res: Response, next: NextFuncti
           }
         }
     });
-    let questionPush:any = await Question.findById(idElement);
+    let questionPush:any = await Survey.findById(idElement);
     return res.status(200).json(questionPush);
   } catch (err) {
     res.status(500).json({
@@ -105,14 +79,14 @@ export const pushQuestion = async (req: Request, res: Response, next: NextFuncti
   }
 }
 
-export const updateQuestion = async (req: Request, res: Response, next: NextFunction) => {
+export const updateSurvey = async (req: Request, res: Response, next: NextFunction) => {
   try {
     let { id } = req.params;
     let update = req.body;
-    let questionUpdate = await Question.findByIdAndUpdate(id, update, { new: true })
+    let surveyUpdate = await Survey.findByIdAndUpdate(id, update, { new: true })
     res.status(200).json({ 
-      msg: 'Question update',
-      questionUpdate 
+      msg: 'Survey update',
+      surveyUpdate 
     });
   } catch (err) {
     res.status(500).json({
@@ -122,6 +96,9 @@ export const updateQuestion = async (req: Request, res: Response, next: NextFunc
   }
 }
 
+/**
+ * Responder una pregunta en el array de objetos questions
+ */
 export const updateSubQuestion = async (req: Request, res: Response, next: NextFunction) => {
   try {
     let { id } = req.params;
@@ -129,7 +106,7 @@ export const updateSubQuestion = async (req: Request, res: Response, next: NextF
     let { idQuestion } = req.params; 
     let update = req.body;
     /** Obtengo todo el objeto por medio del findById de mongoose */
-    let questionById = await Question.findById(id);
+    let questionById = await Survey.findById(id);
     /** Obtengo todo el array de preguntas */
     let questionEmbedded = questionById?.question;
     /** Retorno el primer objeto cuya pregunta sea un string vacio */
@@ -146,7 +123,7 @@ export const updateSubQuestion = async (req: Request, res: Response, next: NextF
     let { answerClient } = req.body;
     let subQuestionUpdated;
     if(idQuestion2!== undefined){
-      subQuestionUpdated = await Question.updateOne(
+      subQuestionUpdated = await Survey.updateOne(
         // {_id:id,'question._id':idQuestion2[3]},
 
         /** By passing the question id as a parameter, i can update
@@ -167,11 +144,10 @@ export const updateSubQuestion = async (req: Request, res: Response, next: NextF
     next(err);
   }
 }
-export const deleteQuestion = async (req: Request, res: Response, next: NextFunction) => {
+export const deleteSurvey = async (req: Request, res: Response, next: NextFunction) => {
   try {
     let { id } = req.params;
-    /** await Question.findByIdAndDelete(id)  */
-    await Question.findByIdAndDelete({_id: id});
+    await Survey.findByIdAndDelete({_id: id});
     res.status(200).json({
       message: 'Question deleted'
     })
@@ -187,9 +163,9 @@ export const deleteQuestion = async (req: Request, res: Response, next: NextFunc
  * Delete all documents of collection question
  */
 
-export const deleteAllQuestion = async(req:Request, res: Response, next:NextFunction) => {
+export const deleteAllSurvey = async(req:Request, res: Response, next:NextFunction) => {
   try{
-    await Question.deleteMany({});
+    await Survey.deleteMany({});
     res.status(200).json({msg:'All documents was deleted'})
   }catch(err){
     res.status(500).json({
