@@ -8,6 +8,7 @@ import {
     deleteSurvey,
     getSurvey,
     getSurveys,
+    getSurveyQuestion,
     updateSurvey,
     updateSubQuestion,
     pushQuestion,
@@ -20,6 +21,9 @@ const router: Router = Router();
 
 router.get('/surveys',getSurveys);
 router.get('/survey/:id', getSurvey);
+
+// router.get('/survey/:idSurvey/:idQuestion',getSurveyQuestion)
+router.get('/survey/:idSurvey/:idQuestion',getSurveyQuestion)
 
 /* check() is a middleware used to validate the incoming data as per the fields */
 router.post('/survey',[

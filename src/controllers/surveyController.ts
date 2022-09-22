@@ -46,6 +46,32 @@ export const getSurvey = async (req: Request, res: Response, next: NextFunction)
     next(err);
   }
 }
+/**
+ * Obtener un survey con una pregunta en especifico
+ */
+export const getSurveyQuestion = async(req:Request,res:Response,next:NextFunction)=>{
+  try{
+    let { idSurvey } = req.params; 
+    let { idQuestion } = req.params;
+    const surveyQuestion = await Survey.findById(idSurvey);
+    let questionEmbedded = surveyQuestion?.question;
+    /* let result = questionEmbedded?.find((question:any)=>{
+      return question === idQuestion;
+    }) */
+    let r = questionEmbedded?.map((question:any)=>{
+      return question._id;
+    })
+    let x = r?.find((el)=>{
+      return el === idQuestion;
+    })
+    console.log(x);
+  }catch(err){
+    res.status(500).json({
+      message: ` An error ocurred ${err}`
+    })
+    next(err);
+  }
+}
 /** 
  * Agregar una nueva pregunta al array de objetos questions
  * 
