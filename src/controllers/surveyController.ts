@@ -7,8 +7,7 @@
 ==================================*/
 import Survey from '../models/survey'
 import { Request, Response, NextFunction } from 'express'
-import { QuestionObject } from '../types';
-import { Types, ObjectId } from 'mongoose';
+import { Types} from 'mongoose';
 
 export const addSurvey = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -157,11 +156,6 @@ export const updateSubQuestion = async (req: Request, res: Response, next: NextF
     let subQuestionUpdated;
     if(idQuestion2!== undefined){
       subQuestionUpdated = await Survey.updateOne(
-        // {_id:id,'question._id':idQuestion2[3]},
-
-        /** By passing the question id as a parameter, i can update
-         * the qeustion answer dynamically
-         */
         {_id:id,'question._id':idQuestion},
         {$set:{'question.$.answer':answerClient}}
       );
