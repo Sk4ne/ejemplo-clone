@@ -8,6 +8,7 @@
 import Survey from '../models/survey'
 import { Request, Response, NextFunction } from 'express'
 import { QuestionObject } from '../types';
+import { Types, ObjectId } from 'mongoose';
 
 export const addSurvey = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -51,20 +52,26 @@ export const getSurvey = async (req: Request, res: Response, next: NextFunction)
  */
 export const getSurveyQuestion = async(req:Request,res:Response,next:NextFunction)=>{
   try{
-    let { idSurvey } = req.params; 
+    type infoUser = {
+      _id:Types.ObjectId,
+      titleSurvey:string,
+      descripcion:string,
+      question: [
+        {
+          _id:string,
+          titleQuestion:string,
+          typeQuestion:string,
+          answer:string
+        }
+      ]
+    }
+    let { idSurvey }  = req.params; 
     let { idQuestion } = req.params;
-    const surveyQuestion = await Survey.findById(idSurvey);
-    let questionEmbedded = surveyQuestion?.question;
-    /* let result = questionEmbedded?.find((question:any)=>{
-      return question === idQuestion;
-    }) */
-    let r = questionEmbedded?.map((question:any)=>{
-      return question._id;
+    const surveyId: infoUser | null =  await Survey.findById(idSurvey);
+    let surveyQuestion = surveyId?.question.find(elem => elem._id == idQuestion);
+    return res.status(200).json({
+      surveyQuestion
     })
-    let x = r?.find((el)=>{
-      return el === idQuestion;
-    })
-    console.log(x);
   }catch(err){
     res.status(500).json({
       message: ` An error ocurred ${err}`
