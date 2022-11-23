@@ -16,6 +16,7 @@ import {
 } from '../../controllers/surveyController'
 import { validateFields } from '../../middlewares/validateFields';
 import { titleSurveyUn } from '../../helpers/fieldQuestUnique';
+import { deleteQuestion } from '../../controllers/surveyController';
 
 const router: Router = Router();
 
@@ -24,6 +25,9 @@ router.get('/survey/:id', getSurvey);
 
 // router.get('/survey/:idSurvey/:idQuestion',getSurveyQuestion)
 router.get('/survey/:idSurvey/:idQuestion',getSurveyQuestion)
+
+// Delete question
+router.delete('/survey/:idSurvey/:idQuestion',deleteQuestion)
 
 /* check() is a middleware used to validate the incoming data as per the fields */
 router.post('/survey',[
@@ -42,6 +46,7 @@ router.post('/survey',[
 router
   .put('/survey/:id', updateSurvey)
   /* .put('/sub-question/:id',updateSubQuestion) */
+  /* Responder una pregunta  */
   .put('/sub-question/:id/:idQuestion',updateSubQuestion)
   .delete('/survey/:id', deleteSurvey)
   .put('/push-question/:idElement',pushQuestion)

@@ -19,7 +19,7 @@
 NOTA: Tengo que implementar una pasarela de pago ya sea epayco o payu en uno de mis proyectos
 
 ## TASK
-- [ ] Crear el repositorio de la API en GITLAB
+- [x] Crear el repositorio de la API en GITLAB
 - [x] Desintalar los paquetes que no se este usando
 - [x] Implementar express-validator en la ruta question.
 - [x] Validar que se ingrese una typeQuestion Valid al hacer el push a un array de Question
