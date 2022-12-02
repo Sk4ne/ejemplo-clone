@@ -85,7 +85,7 @@ export const getSurveyQuestion = async(req:Request,res:Response,next:NextFunctio
 export const pushQuestion = async (req: Request, res: Response, next: NextFunction) => {
   try {
     type infoQuestion = {
-      _id:Types.ObjectId,
+      _id:string | Types.ObjectId,
       titleSurvey:string,
       descripcion:string,
       question: [
@@ -97,9 +97,16 @@ export const pushQuestion = async (req: Request, res: Response, next: NextFuncti
         }
       ]
     }
+    interface respuestaPregunta {
+      titleQuestion:string;
+      typeQuestion:string;
+      answer:string
+    }
 
-    let { idElement } = req.params;
-    let { titleQuestion, typeQuestion, answer } = req.body;
+    
+    // let { idElement } = req.params; ORIGINAL
+    let idElement :string = req.params.idElement;
+    let { titleQuestion, typeQuestion, answer }:respuestaPregunta = req.body;
     if( !(typeQuestion === 'QUESTION_OPEN' || typeQuestion === 'QUESTION_MULTIPLE' ) ){
       return res.status(404).json({msg:`${typeQuestion} is not typeQuestion valid :)`});
     }
@@ -115,13 +122,17 @@ export const pushQuestion = async (req: Request, res: Response, next: NextFuncti
             }
           }
       });
-      let questionPush:any = await Survey.findById(idElement);
+      let questionPush:infoQuestion | null = await Survey.findById(idElement);
       return res.status(200).json(questionPush);
     }else{
-      let options = [];
-      let opt = 0;
-      let opt2 = 0;
-      let opt3 = 0;
+      // let questionOptions:string[];
+      // let opt = 'lorem ipsum';
+      // let opt2 = 'lorem ipsum';
+      // let opt3 = 'lorem ipsum';
+      // let opt4 = 'lorem ipsum';
+      // questionOptions.push()
+
+      // return console.log('La PREGUNTA ES DE tipo ' + typeQuestion);
       await Survey.updateOne(
         {_id:idElement },
         {
@@ -246,6 +257,21 @@ export const deleteQuestion = async(req:Request,res:Response,next:NextFunction)=
     let { idSurvey }  = req.params; 
     let { idQuestion } = req.params;
 
+    interface GetQuestById {
+      _id:string | Types.ObjectId,
+      titleSurvey:string,
+      descripcion:string,
+      question: [
+        {
+          _id:string,
+          titleQuestion:string,
+          typeQuestion:string,
+          answer:string
+        }
+      ],
+      createAt: Date,
+      state: boolean
+    }
     // OBTENER UNA ENCUESTA
     type arrayQ = [
       {
@@ -256,8 +282,8 @@ export const deleteQuestion = async(req:Request,res:Response,next:NextFunction)=
       }
     ]
 
-    let questionById/*:questionByIdReturn | null*/ = await Survey.findById(idSurvey);
-    
+    // let questionById/*:questionByIdReturn | null*/ = await Survey.findById(idSurvey);
+    let questionById : GetQuestById | null= await Survey.findById(idSurvey); 
     // OBTENGO EL ARREGLO DE PREGUNTAS
     let arrayQuestion:arrayQ | undefined = questionById?.question;
     let questionD = arrayQuestion?.find(element => element._id == idQuestion);
