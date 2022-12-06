@@ -8,12 +8,15 @@
 import Survey from '../models/survey'
 import { Request, Response, NextFunction } from 'express'
 import { Types } from 'mongoose';
+import { questionMultiple } from '../types';
 
 export const addSurvey = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const body = req.body;
+    // const {titleSurvey,description, question }:questionMultiple = req.body;
+    // return console.log(question.answerM);
     const survey = await Survey.create(body);
-    res.status(201).json(survey);
+    res.status(201).json(body);
   } catch (err) {
     res.status(500).json({
       message: `An error ocurred ${err}`
@@ -185,11 +188,14 @@ export const updateSubQuestion = async (req: Request, res: Response, next: NextF
     let questionById = await Survey.findById(id);
     /** Obtengo todo el array de preguntas */
     let questionEmbedded = questionById?.question;
+
     /** Retorno el primer objeto cuya pregunta sea un string vacio */
     /** variable result return undefined */
-    /* let result = questionEmbedded?.find(question=>{
-      return question._id === idQuestion;
-    }); */
+    let result = questionEmbedded?.find(question=>{
+      // return question._id === idQuestion;  
+      return question;  
+    });
+
     /**
      * Recorro el array de objetos de preguntas y guardo en un array todos los IDS de las mismas.
      */
@@ -197,20 +203,57 @@ export const updateSubQuestion = async (req: Request, res: Response, next: NextF
     const idQuestion2:string[] | undefined = questionEmbedded?.map((elem)=>{
       return elem._id;
     });
+    
+    /* return type question */
+    const typeQuestion:string[] | undefined = questionEmbedded?.map((elem)=>{
+      return elem.typeQuestion;
+    });
+
+    // const test:any  = questionEmbedded?.map((elem)=>{
+    //   return elem.answerM.answer;
+    // }); 
+
+
+    if(typeQuestion![0] === 'QUESTION_MULTIPLE'){
+      let { answerClient } = req.body;
+      let subQuestionUpdated;
+      // let testStack;
+      if(idQuestion2!== undefined){
+        // subQuestionUpdated = await Survey.updateOne(
+        //   {_id:id,'question._id':idQuestion},
+        //   // {$set:{'question.$.answerO':answerClient}}
+        //   {$set:
+        //     {
+        //      test:answerClient
+        //     }
+        //   }
+        // );
+        subQuestionUpdated = await Survey.updateOne(
+          {"_id": id},{$set: {"question.$[answ].answerM.answer": answerClient}},{arrayFilters:[{"answ._id": idQuestion}]})
+      }
+      res.status(200).json({
+        message: 'Question updated',
+        subQuestionUpdated
+      })
+    }
 
     
-    let { answerClient } = req.body;
-    let subQuestionUpdated;
-    if(idQuestion2!== undefined){
-      subQuestionUpdated = await Survey.updateOne(
-        {_id:id,'question._id':idQuestion},
-        {$set:{'question.$.answer':answerClient}}
-      );
+    if(typeQuestion![0] === 'QUESTION_OPEN'){
+      let { answerOpen } = req.body;
+      let subQuestionUpdated;
+      if(idQuestion2!== undefined){
+        subQuestionUpdated = await Survey.updateOne(
+          {_id:id,'question._id':idQuestion},
+          {$set:{'question.$.answerO':answerOpen}}
+        );
+      }
+      // console.log(subQuestionUpdated)
+      res.status(200).json({
+        message: 'Question updated',
+        subQuestionUpdated
+      })
     }
-    res.status(200).json({
-      message: 'Question updated',
-      subQuestionUpdated
-    })
+
   } catch (err) {
     res.status(500).json({
       message: `An error ocurred ${err}`
