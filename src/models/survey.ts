@@ -14,7 +14,14 @@ interface Survey extends mongoose.Document{
      _id: any;
      titleQuestion: string;
      typeQuestion: string;
-     answer: string;
+    //  answer: string;
+     answerO: string;
+    //  answerM: string[]
+    answerM: {
+      options:string[],
+      /* La respuesta es cualquiera de las opciones que se encuentra en el array options */
+      answer: {type:string, default:''}
+    }
    }],
    createAt: Date;
    state:boolean;
@@ -31,8 +38,10 @@ const surveySchema = new Schema({
       type:String, 
       enum: validTypeQuestion,
     },
-    answer: {
-      type:String,default:''
+    answerO: { type:String,default:''},
+    answerM: {   
+      options:[ String ], 
+      answer: {type:String, default:''} 
     }
   }],
   createAt:{ type:Date,default: Date.now() },
