@@ -8,15 +8,13 @@
 import Survey from '../models/survey'
 import { Request, Response, NextFunction } from 'express'
 import { Types } from 'mongoose';
-import { questionMultiple } from '../types';
+import { infoQuestion, infoUser, questionMultiple, answerQuestionOpen, answerQuestionMultiple } from '../types';
 
 export const addSurvey = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const body = req.body;
-    // const {titleSurvey,description, question }:questionMultiple = req.body;
-    // return console.log(question.answerM);
     const survey = await Survey.create(body);
-    res.status(201).json(body);
+    res.status(201).json(survey);
   } catch (err) {
     res.status(500).json({
       message: `An error ocurred ${err}`
@@ -54,19 +52,6 @@ export const getSurvey = async (req: Request, res: Response, next: NextFunction)
  */
 export const getSurveyQuestion = async(req:Request,res:Response,next:NextFunction)=>{
   try{
-    type infoUser = {
-      _id:Types.ObjectId,
-      titleSurvey:string,
-      descripcion:string,
-      question: [
-        {
-          _id:string,
-          titleQuestion:string,
-          typeQuestion:string,
-          answer:string
-        }
-      ]
-    }
     let { idSurvey }  = req.params; 
     let { idQuestion } = req.params;
     const surveyId: infoUser | null =  await Survey.findById(idSurvey);
@@ -87,63 +72,62 @@ export const getSurveyQuestion = async(req:Request,res:Response,next:NextFunctio
 */
 export const pushQuestion = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    type infoQuestion = {
-      _id:string | Types.ObjectId,
-      titleSurvey:string,
-      descripcion:string,
-      question: [
-        {
-          _id:string,
-          titleQuestion:string,
-          typeQuestion:string,
-          answer:string
-        }
-      ]
-    }
-    interface respuestaPregunta {
-      titleQuestion:string;
-      typeQuestion:string;
-      answer:string
-    }
 
-    
-    // let { idElement } = req.params; ORIGINAL
+    /* PREGUNTAS ABIERTAS  */
+
     let idElement :string = req.params.idElement;
-    let { titleQuestion, typeQuestion, answer }:respuestaPregunta = req.body;
-    if( !(typeQuestion === 'QUESTION_OPEN' || typeQuestion === 'QUESTION_MULTIPLE' ) ){
-      return res.status(404).json({msg:`${typeQuestion} is not typeQuestion valid :)`});
+    // let { titleQuestion, typeQuestion, answerO}:answerQuestionOpen = req.body;
+    let { titleQuestion, typeQuestion, answerO}:any = req.body;
+
+
+    // [
+    //   {
+    //     answerM: { options: [Array], answer: '' },
+    //     titleQuestion: 'EN CUANTOS MESES PUEDES APRENDER VUEJS?',
+    //     typeQuestion: 'QUESTION_MULTIPLE',
+    //     answerO: ''
+    //   }
+    // ]
+    
+    let preg:any = req.body.question;
+    let opciones = preg[0]['answerM']['options'];
+    let respuesta = preg[0]['answerM']['answer'];
+    let tipoPregunta = preg[0]['typeQuestion'];
+    let tituloPregunta = preg[0]['titleQuestion'];
+    console.log(tituloPregunta);
+
+    if( !(typeQuestion === 'QUESTION_OPEN' || typeQuestion === 'QUESTION_MULTIPLE' || tipoPregunta === 'QUESTION_MULTIPLE'  )){
+      return res.status(404).json({msg:`${typeQuestion} is not typeQuestion valid ddsdfdf :)`});
     }
     if(typeQuestion === 'QUESTION_OPEN'){
+      console.log('SOY UNA PREGUNTA ABIERTA');
       await Survey.updateOne(
         {_id:idElement },
         {
           $push: {
-            question: {
+            question: {  
               titleQuestion: titleQuestion,
               typeQuestion: typeQuestion,
-              answer: answer
+              answerO: answerO
             }
           }
       });
       let questionPush:infoQuestion | null = await Survey.findById(idElement);
-      return res.status(200).json(questionPush);
-    }else{
-      // let questionOptions:string[];
-      // let opt = 'lorem ipsum';
-      // let opt2 = 'lorem ipsum';
-      // let opt3 = 'lorem ipsum';
-      // let opt4 = 'lorem ipsum';
-      // questionOptions.push()
-
-      // return console.log('La PREGUNTA ES DE tipo ' + typeQuestion);
+      return res.status(200).json(questionPush); 
+    }
+    if(tipoPregunta === 'QUESTION_MULTIPLE'){
+      /* PREGUNTAS DE SELECCION MULTIPLE  */
       await Survey.updateOne(
         {_id:idElement },
-        {
+        {     
           $push: {
             question: {
-              titleQuestion: titleQuestion,
-              typeQuestion: typeQuestion,
-              answer: answer
+              titleQuestion: tituloPregunta,
+              typeQuestion: tipoPregunta,   
+              answerM: {
+                options: opciones,
+                answer: respuesta
+             },
             }
           }
       });
@@ -209,25 +193,11 @@ export const updateSubQuestion = async (req: Request, res: Response, next: NextF
       return elem.typeQuestion;
     });
 
-    // const test:any  = questionEmbedded?.map((elem)=>{
-    //   return elem.answerM.answer;
-    // }); 
-
-
     if(typeQuestion![0] === 'QUESTION_MULTIPLE'){
       let { answerClient } = req.body;
       let subQuestionUpdated;
       // let testStack;
       if(idQuestion2!== undefined){
-        // subQuestionUpdated = await Survey.updateOne(
-        //   {_id:id,'question._id':idQuestion},
-        //   // {$set:{'question.$.answerO':answerClient}}
-        //   {$set:
-        //     {
-        //      test:answerClient
-        //     }
-        //   }
-        // );
         subQuestionUpdated = await Survey.updateOne(
           {"_id": id},{$set: {"question.$[answ].answerM.answer": answerClient}},{arrayFilters:[{"answ._id": idQuestion}]})
       }
@@ -236,8 +206,6 @@ export const updateSubQuestion = async (req: Request, res: Response, next: NextF
         subQuestionUpdated
       })
     }
-
-    
     if(typeQuestion![0] === 'QUESTION_OPEN'){
       let { answerOpen } = req.body;
       let subQuestionUpdated;

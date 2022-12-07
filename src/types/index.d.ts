@@ -62,3 +62,108 @@ export interface QuestionObject{
     }
   ]
 }
+
+
+export interface questionOpen {
+  _id:Types.ObjectId,
+  titleSurvey:string,
+  description:string,
+  question: [
+    {
+      _id:string,
+      titleQuestion:string,
+      typeQuestion:string,
+      answerO:string
+    }
+  ]
+}
+
+export interface questionMultiple extends questionOpen {
+  question: [
+    {
+      _id:string,
+      titleQuestion:string,
+      typeQuestion:string,
+      answerM: {
+        options:[ string ],
+        /* La respuesta es cualquiera de las opciones que se encuentra en el array options */
+        answer: {type:string, default:''}
+      }
+    }
+  ]
+}
+
+export interface returnQuestionById {
+    _id: Types.ObjectId | string;
+    titleSurvey: string;
+    description: string;
+    question: [
+      {
+        answerM: {
+          "options":string[],
+          "answer":string
+        },
+        titleQuestion: string,
+        typeQuestion: string,
+        answerO: string,
+        _id: Types.ObjectId | string
+      }
+    ],
+    createAt: Date;
+    state: boolean;
+}
+
+export interface questionArray {
+  [
+    {
+      answerM: { options: [string], answer: string },
+      titleQuestion: string,
+      typeQuestion: string,
+      answerO: string,
+      _id: Types.ObjectId | string
+    }
+  ]
+}
+
+
+/* Types and interfaces surveycontrollers */
+type infoQuestion = {
+  _id:string | Types.ObjectId,
+  titleSurvey:string,
+  descripcion:string,
+  question: [
+    {
+      _id:string,
+      titleQuestion:string,
+      typeQuestion:string,
+      answer:string
+    }
+  ]
+}
+interface answerQuestionOpen {
+  titleQuestion:string;
+  typeQuestion:string;
+  answerO:string;
+}
+interface answerQuestionMultiple {
+  titleQuestion:string;
+  typeQuestion:string;
+   answerM: {
+    options: [string],
+    answer: string
+  },
+}
+
+type infoUser = {
+  _id:Types.ObjectId,
+  titleSurvey:string,
+  descripcion:string,
+  question: [
+    {
+      _id:string,
+      titleQuestion:string,
+      typeQuestion:string,
+      answer:string
+    }
+  ]
+}
