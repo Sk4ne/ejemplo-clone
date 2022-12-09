@@ -2,6 +2,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 import './db/config'
 /** swagger  */
+/* INTERFAZ GRAFICA DE LA DOCUMENTACION */
 import swaggerUi from 'swagger-ui-express'
 import swaggerJsDoc from 'swagger-jsdoc'
 import { options } from './swaggerOptions'
