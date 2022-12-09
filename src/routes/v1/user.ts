@@ -42,114 +42,8 @@ const router: Router = Router();
  * http:localhost:3000/v1/
  */
 
-/**
- * @swagger 
- * components:
- *  schemas:
- *    User:
- *      type: object  
- *      properties:
- *        id:
- *          type: string
- *          description: autogenerado id del usuario
- *        name:
- *          type: string
- *          description: name of user
- *        email:
- *          type: string
- *          description: email of user
- *        password: 
- *          type: string
- *          description: password user encripted
- *        img:
- *          type: string
- *          description: img or avatar of user
- *        facebook:
- *          type: boolean
- *          description: the users can authenticate with facebook
- *        google:
- *          type: boolean
- *          description: the users can authenticate with google
- *        createAt:
- *          type: string
- *          description: Date of user was create
- *        state:
- *          type: boolean
- *          description: When an user is created its state is true
- *      required: 
- *        - name
- *        - email
- *        - password
- *      example:
- *        id: 5d5015069d894b19b91c71f1
- *        name: SOFIA 
- *        description: i have to do something 
- *    UserNotFound:
- *      type: object
- *      properties:
- *        msg:
- *          type: string
- *          description: a message for the not found user 
- *  parameters: 
- *    userId:
- *      in: path
- *      name: id
- *      required: true
- *      schema:
- *        type: string
- *      description: the user id
- */
-
-/**
- * @swagger
- * tags:
- *  name: Users
- *  description: Users endpoints 
- */
-
-/**
- * @swagger 
- *  /users:
- *  get: 
- *    summary: Muestra todos los usuarios que existen en la API
- *    tags: [Users]
- *    responses:
- *      200:
- *        description: Listado de usuarios
- *        content:
- *          application/json:
- *            schema:
- *              type: array
- *              items:
- *                $ref: '#/components/schemas/User'
- */
-
 router.get('/users',validateJwt,userAdmin,getUsers)
 router.get('/user/:id',/* validateJwt ,userAdmin,*/getUser)
-
-/**
- * @swagger
- * /user:
- *  post:
- *    summary: create a new user
- *    tags: [Users]
- *    requestBody:
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            $ref: '#/components/schemas/User'
- *    responses:
- *      200:
- *        description: User successfully created
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/User'
- *      500:
- *        description: Some server error
- *        
- */
 
 router.post('/user',storage.single('img'),[
   check('email')
@@ -165,30 +59,6 @@ router.post('/user',storage.single('img'),[
 
 /** ruta login */
 router.post('/user/login',login)
-
-/**
- * @swagger
- * /user/{id}: 
- *  get:
- *    summary: Get a user by id
- *    tags: [Users]
- *    parameters:
- *      - $ref: '#components/parameters/userId'
- *    responses:
- *      200: 
- *        description: user was found  
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schema/user'    
- *      404:  
- *        description: user was not found
- *        content: 
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/UserNotFound'
- *                 
- */
 router.put('/user/:id', storage.single('img'),updateUser)
 
 /** This route is use to send one link to email user to restore password */
