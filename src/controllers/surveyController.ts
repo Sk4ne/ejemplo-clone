@@ -7,8 +7,11 @@
 ==================================*/
 import Survey from '../models/survey'
 import { Request, Response, NextFunction } from 'express'
-import { Types } from 'mongoose';
-import { infoQuestion, infoUser, questionMultiple, answerQuestionOpen, answerQuestionMultiple } from '../types';
+import {
+  infoQuestion,
+  questionReturn,
+  /* infoUser, */ surveyById, returnQuestion, question
+} from '../types';
 
 export const addSurvey = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -38,7 +41,7 @@ export const getSurveys = async (req: Request, res: Response, next: NextFunction
 export const getSurvey = async (req: Request, res: Response, next: NextFunction) => {
   try {
     let { id } = req.params
-    const survey = await Survey.findById(id);
+    const survey:surveyById | null = await Survey.findById(id);
     res.status(200).json(survey);
   } catch (err) {
     res.status(500).json({
@@ -54,7 +57,7 @@ export const getSurveyQuestion = async(req:Request,res:Response,next:NextFunctio
   try{
     let { idSurvey }  = req.params; 
     let { idQuestion } = req.params;
-    const surveyId: infoUser | null =  await Survey.findById(idSurvey);
+    const surveyId: surveyById | null =  await Survey.findById(idSurvey);
     let surveyQuestion = surveyId?.question.find(elem => elem._id == idQuestion);
     return res.status(200).json({
       surveyQuestion
@@ -77,38 +80,40 @@ export const pushQuestion = async (req: Request, res: Response, next: NextFuncti
 
     let idElement :string = req.params.idElement;
     // let { titleQuestion, typeQuestion, answerO}:answerQuestionOpen = req.body;
-    let { titleQuestion, typeQuestion, answerO}:any = req.body;
-
-
-    // [
-    //   {
-    //     answerM: { options: [Array], answer: '' },
-    //     titleQuestion: 'EN CUANTOS MESES PUEDES APRENDER VUEJS?',
-    //     typeQuestion: 'QUESTION_MULTIPLE',
-    //     answerO: ''
-    //   }
-    // ]
-    
-    let preg:any = req.body.question;
-    let opciones = preg[0]['answerM']['options'];
-    let respuesta = preg[0]['answerM']['answer'];
-    let tipoPregunta = preg[0]['typeQuestion'];
-    let tituloPregunta = preg[0]['titleQuestion'];
-    console.log(tituloPregunta);
-
-    if( !(typeQuestion === 'QUESTION_OPEN' || typeQuestion === 'QUESTION_MULTIPLE' || tipoPregunta === 'QUESTION_MULTIPLE'  )){
-      return res.status(404).json({msg:`${typeQuestion} is not typeQuestion valid ddsdfdf :)`});
+    type paramPushQuestionO = {
+      question:[
+        {
+          titleQuestion:string;
+          typeQuestion:string; 
+          answerO:string;
+        }
+      ]
     }
-    if(typeQuestion === 'QUESTION_OPEN'){
-      console.log('SOY UNA PREGUNTA ABIERTA');
+    let preg:any/* questionReturn */ = req.body.question;
+    // return console.log(preg);
+    let tipoPregunta:string = preg[0]['typeQuestion'];
+    let opciones:string[] = preg[0]['answerM']['options'];
+    let respMultiple:string = preg[0]['answerM']['answer'];
+    let respOpen:string = preg[0]['answerO'];
+    let tituloPregunta:string = preg[0]['titleQuestion'];
+
+    if( !(tipoPregunta === 'QUESTION_OPEN' || tipoPregunta === 'QUESTION_MULTIPLE'  )){
+      return res.status(404).json({msg:`${tipoPregunta} is not valid ddsdfdf :)`});
+    }
+    if(tipoPregunta === 'QUESTION_OPEN'){
       await Survey.updateOne(
         {_id:idElement },
         {
           $push: {
             question: {  
-              titleQuestion: titleQuestion,
-              typeQuestion: typeQuestion,
-              answerO: answerO
+              /* question multiple */
+              answerM: {
+                options: [],
+                answer: ""
+              },
+              titleQuestion: tituloPregunta,
+              typeQuestion: tipoPregunta,
+              answerO: respOpen
             }
           }
       });
@@ -126,7 +131,7 @@ export const pushQuestion = async (req: Request, res: Response, next: NextFuncti
               typeQuestion: tipoPregunta,   
               answerM: {
                 options: opciones,
-                answer: respuesta
+                answer: respMultiple
              },
             }
           }
@@ -136,7 +141,8 @@ export const pushQuestion = async (req: Request, res: Response, next: NextFuncti
     }
   } catch (err) {
     res.status(500).json({
-      message: ` An error ocurred ${err}`
+      err
+      // message: ` An error ocurred ${err}`
     })
     next(err);
   }
@@ -164,58 +170,44 @@ export const updateSurvey = async (req: Request, res: Response, next: NextFuncti
  */
 export const updateSubQuestion = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    /* id survey */
     let { id } = req.params;
-    /** Paso como parametro el id de la pregunta que quiero responder */
+    /* id question */
     let { idQuestion } = req.params; 
-    let update = req.body;
-    /** Obtengo todo el objeto por medio del findById de mongoose */
     let questionById = await Survey.findById(id);
     /** Obtengo todo el array de preguntas */
     let questionEmbedded = questionById?.question;
-
-    /** Retorno el primer objeto cuya pregunta sea un string vacio */
-    /** variable result return undefined */
-    let result = questionEmbedded?.find(question=>{
-      // return question._id === idQuestion;  
-      return question;  
-    });
-
-    /**
-     * Recorro el array de objetos de preguntas y guardo en un array todos los IDS de las mismas.
-     */
-
-    const idQuestion2:string[] | undefined = questionEmbedded?.map((elem)=>{
+    const verifyQuestionUndefined:string[] | undefined = questionEmbedded?.map((elem)=>{
       return elem._id;
     });
-    
-    /* return type question */
-    const typeQuestion:string[] | undefined = questionEmbedded?.map((elem)=>{
-      return elem.typeQuestion;
-    });
+    const surveyId: surveyById | null =  await Survey.findById(id);
+    let surveyQuestion = surveyId?.question.find(elem => elem._id == idQuestion);
 
-    if(typeQuestion![0] === 'QUESTION_MULTIPLE'){
-      let { answerClient } = req.body;
-      let subQuestionUpdated;
-      // let testStack;
-      if(idQuestion2!== undefined){
-        subQuestionUpdated = await Survey.updateOne(
-          {"_id": id},{$set: {"question.$[answ].answerM.answer": answerClient}},{arrayFilters:[{"answ._id": idQuestion}]})
+    /* Obtengo el typeQuestion  */
+    let typeQuestion:string | undefined = surveyQuestion?.typeQuestion; 
+
+    if(typeQuestion === 'QUESTION_MULTIPLE'){
+      let { answerMultiple } = req.body;
+
+      let subQuestionUpdated:any;
+      if(verifyQuestionUndefined!== undefined){
+         subQuestionUpdated = await Survey.updateOne(
+          {"_id": id},{$set: {"question.$[answ].answerM.answer": answerMultiple}},{arrayFilters:[{"answ._id": idQuestion}]})
       }
       res.status(200).json({
         message: 'Question updated',
         subQuestionUpdated
       })
     }
-    if(typeQuestion![0] === 'QUESTION_OPEN'){
+    if(typeQuestion === 'QUESTION_OPEN'){
       let { answerOpen } = req.body;
-      let subQuestionUpdated;
-      if(idQuestion2!== undefined){
+      let subQuestionUpdated:any;
+      if(verifyQuestionUndefined!== undefined){
         subQuestionUpdated = await Survey.updateOne(
           {_id:id,'question._id':idQuestion},
           {$set:{'question.$.answerO':answerOpen}}
         );
       }
-      // console.log(subQuestionUpdated)
       res.status(200).json({
         message: 'Question updated',
         subQuestionUpdated
@@ -268,36 +260,10 @@ export const deleteQuestion = async(req:Request,res:Response,next:NextFunction)=
     let { idSurvey }  = req.params; 
     let { idQuestion } = req.params;
 
-    interface GetQuestById {
-      _id:string | Types.ObjectId,
-      titleSurvey:string,
-      descripcion:string,
-      question: [
-        {
-          _id:string,
-          titleQuestion:string,
-          typeQuestion:string,
-          answer:string
-        }
-      ],
-      createAt: Date,
-      state: boolean
-    }
-    // OBTENER UNA ENCUESTA
-    type arrayQ = [
-      {
-        _id: string, 
-        titleQuestion: string,
-        typeQuestion: string,
-        answer: string
-      }
-    ]
-
-    // let questionById/*:questionByIdReturn | null*/ = await Survey.findById(idSurvey);
-    let questionById : GetQuestById | null= await Survey.findById(idSurvey); 
-    // OBTENGO EL ARREGLO DE PREGUNTAS
-    let arrayQuestion:arrayQ | undefined = questionById?.question;
-    let questionD = arrayQuestion?.find(element => element._id == idQuestion);
+    let questionById : surveyById | null= await Survey.findById(idSurvey); 
+    // OBTENGO UN ARREGLO CON LA PREGUNTA A ELIMINAR...
+    let arrayQuestion: returnQuestion | undefined = questionById?.question;
+    let questionD:question | undefined = arrayQuestion?.find(element => element._id == idQuestion);
     let deleteEl = questionD?._id;
     const questionDelete = await Survey.updateOne({_id:idSurvey},{$pull: {question: {_id: deleteEl}}});
     return res.status(200).json({
