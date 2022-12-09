@@ -24,6 +24,7 @@ interface Survey extends mongoose.Document{
     }
    }],
    createAt: Date;
+  //  createAt: Date;
    state:boolean;
 }
 
@@ -40,11 +41,13 @@ const surveySchema = new Schema({
     },
     answerO: { type:String,default:''},
     answerM: {   
-      options:[ String ], 
+      options: {type : [String], default:''}, 
       answer: {type:String, default:''} 
     }
   }],
-  createAt:{ type:Date,default: Date.now() },
+  /* DATE FORMAT */
+  // createAt:{ type:String,default: new Date().toLocaleString('es-CO')},
+  createAt:{ type:Date,default: Date.now()},
   state:{ type:Boolean, default:true}
 },{versionKey:false}); 
 
