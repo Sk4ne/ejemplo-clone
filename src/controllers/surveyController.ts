@@ -221,6 +221,50 @@ export const updateSubQuestion = async (req: Request, res: Response, next: NextF
     next(err);
   }
 }
+/* Actualizar las opciones de las preguntas de opcion multiple */
+export const updateSubQuestionOption = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    /* id survey */
+    let { id } = req.params;
+    /* id question */
+    let { idQuestion } = req.params; 
+    let questionById = await Survey.findById(id);
+    /** Obtengo todo el array de preguntas */
+    let questionEmbedded = questionById?.question;
+    const verifyQuestionUndefined:string[] | undefined = questionEmbedded?.map((elem)=>{
+      return elem._id;
+    });
+    const surveyId: surveyById | null =  await Survey.findById(id);
+    let surveyQuestion = surveyId?.question.find(elem => elem._id == idQuestion);
+
+    /* Obtengo el typeQuestion  */
+    let typeQuestion:string | undefined = surveyQuestion?.typeQuestion; 
+
+    if(typeQuestion === 'QUESTION_MULTIPLE'){
+      type optionsAnswer = {
+        options:string[] 
+      }
+
+      let { options }:optionsAnswer = req.body;
+
+      let optQuestionUpdated:any;
+      if(verifyQuestionUndefined!== undefined){
+         optQuestionUpdated = await Survey.updateOne(
+          {"_id": id},{$set: {"question.$[answ].answerM.options": options}},{arrayFilters:[{"answ._id": idQuestion}]})
+      }
+      res.status(200).json({
+        message: 'OptionQuestion updated',
+        optQuestionUpdated
+      })
+    }
+  } catch (err) {
+    res.status(500).json({
+      message: `An error ocurred ${err}`
+    })
+    next(err);
+  }
+}
+
 export const deleteSurvey = async (req: Request, res: Response, next: NextFunction) => {
   try {
     let { id } = req.params;

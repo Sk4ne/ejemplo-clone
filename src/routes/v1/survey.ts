@@ -13,6 +13,7 @@ import {
     updateSubQuestion,
     pushQuestion,
     deleteAllSurvey,
+    updateSubQuestionOption,
 } from '../../controllers/surveyController'
 import { validateFields } from '../../middlewares/validateFields';
 import { titleSurveyUn } from '../../helpers/fieldQuestUnique';
@@ -48,6 +49,8 @@ router
   /* .put('/sub-question/:id',updateSubQuestion) */
   /* Responder una pregunta  */
   .put('/sub-question/:id/:idQuestion',updateSubQuestion)
+  /* Actualizar las opciones de una pregunta de opcion multiple */
+  .put('/question/option/:id/:idQuestion',updateSubQuestionOption)
   .delete('/survey/:id', deleteSurvey)
   .put('/push-question/:idElement',pushQuestion)
   .delete('/survey',deleteAllSurvey);
