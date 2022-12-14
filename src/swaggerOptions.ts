@@ -4,7 +4,7 @@ export const options = {
     info:{
       title:'Survey API',
       version:'1.0.0',
-      description:'Esta API llamada survey permite generan encuestas por medio de preguntas abierta y cerradas y a su vez descargarlas en formato pdf.'
+      description:'Esta API llamada survey permite generan encuestas por medio de preguntas abierta y/o cerradas y a su vez descargarlas en formato pdf.'
     },
     servers:[
       {
