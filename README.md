@@ -11,9 +11,10 @@ Esta es una API que permite generar encuestas, mediante el uso de preguntas abie
 * `Swagger` para documentar la API
 * `jest y supertest` para hacer el testing de la API.
 * `express-validator` para validar la data y que que cumpla con ciertos paramametros, por ejemplo que una contraseña contenga cierto tipo de caracteres. 
+* `Railway` para hacer el deploy de la API
 
 ### Consideraciones
-Esta api esta en fase de desarrollo,cada día se agregan nuevas funcionalidades y/o se hacen optimizaciones en el código fuente.  
+Esta api esta en fase de desarrollo,cada vez que tengo tiempo libre agrego nuevas funcionalidades y/o realizo optimizaciones en el código fuente.  
 
 ### Retos
 * Tuve dificultades para implementar la autenticación con redes sociales (Facebook y Google), el código que estaba escribiendo no era capaz de identificar con que red social se estaba logueando el usuario. Afortunadamente existe buena documentación sobre Passport-facebook y google-facebook y puede implementar una solución viable. 
