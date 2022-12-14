@@ -42,7 +42,7 @@ const specs = swaggerJsDoc(options);
 /** Middlewares router */
 app.use('/v1',router);
 /**swagger */
-app.use('/docs',swaggerUi.serve,swaggerUi.setup(specs));
+app.use('/v1/docs',swaggerUi.serve,swaggerUi.setup(specs));
 
 app.use(express.static('public'));
 const history = require('connect-history-api-fallback');
