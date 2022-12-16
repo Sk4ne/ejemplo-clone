@@ -50,15 +50,20 @@ export const getSurvey = async (req: Request, res: Response, next: NextFunction)
     next(err);
   }
 }
-/**
- * Obtener un survey con una pregunta en especifico
- */
+//* Obtener un survey con una pregunta en especifico
+
 export const getSurveyQuestion = async(req:Request,res:Response,next:NextFunction)=>{
   try{
     let { idSurvey }  = req.params; 
     let { idQuestion } = req.params;
+    //* Convertir un id de mongodb a string. idMongo.toString()
     const surveyId: surveyById | null =  await Survey.findById(idSurvey);
     let surveyQuestion = surveyId?.question.find(elem => elem._id == idQuestion);
+    if(!surveyQuestion){
+      return res.status(404).json({
+        message: `Dont exist question with this ID ${ idQuestion }`
+      })
+    }
     return res.status(200).json({
       surveyQuestion
     })
@@ -70,7 +75,7 @@ export const getSurveyQuestion = async(req:Request,res:Response,next:NextFunctio
   }
 }
 /** 
- * Agregar una nueva pregunta al array de objetos questions
+ * * Agregar una nueva pregunta al array de objetos questions
  * 
 */
 export const pushQuestion = async (req: Request, res: Response, next: NextFunction) => {
@@ -78,17 +83,8 @@ export const pushQuestion = async (req: Request, res: Response, next: NextFuncti
 
     /* PREGUNTAS ABIERTAS  */
 
-    let idElement :string = req.params.idElement;
+    let idElement :string = req.params.idSurvey;
     // let { titleQuestion, typeQuestion, answerO}:answerQuestionOpen = req.body;
-    type paramPushQuestionO = {
-      question:[
-        {
-          titleQuestion:string;
-          typeQuestion:string; 
-          answerO:string;
-        }
-      ]
-    }
     let preg:any/* questionReturn */ = req.body.question;
     // return console.log(preg);
     let tipoPregunta:string = preg[0]['typeQuestion'];
@@ -183,6 +179,11 @@ export const updateSubQuestion = async (req: Request, res: Response, next: NextF
     const surveyId: surveyById | null =  await Survey.findById(id);
     let surveyQuestion = surveyId?.question.find(elem => elem._id == idQuestion);
 
+    if(!surveyQuestion){
+      return res.status(404).json({
+        message: `Dont exist question with this ID ${ idQuestion }`
+      })
+    }
     /* Obtengo el typeQuestion  */
     let typeQuestion:string | undefined = surveyQuestion?.typeQuestion; 
 
@@ -236,7 +237,12 @@ export const updateSubQuestionOption = async (req: Request, res: Response, next:
     });
     const surveyId: surveyById | null =  await Survey.findById(id);
     let surveyQuestion = surveyId?.question.find(elem => elem._id == idQuestion);
-
+    
+    if(!surveyQuestion){
+      return res.status(404).json({
+        message: `Dont exist question with this ID ${ idQuestion }`
+      })
+    }
     /* Obtengo el typeQuestion  */
     let typeQuestion:string | undefined = surveyQuestion?.typeQuestion; 
 
@@ -309,6 +315,13 @@ export const deleteQuestion = async(req:Request,res:Response,next:NextFunction)=
     let arrayQuestion: returnQuestion | undefined = questionById?.question;
     let questionD:question | undefined = arrayQuestion?.find(element => element._id == idQuestion);
     let deleteEl = questionD?._id;
+    /*  */
+    if(!questionD){
+      return res.status(404).json({
+        message: `Dont exist question with this ID ${ idQuestion }`
+      })
+    }
+    /*  */
     const questionDelete = await Survey.updateOne({_id:idSurvey},{$pull: {question: {_id: deleteEl}}});
     return res.status(200).json({
       questionDelete
