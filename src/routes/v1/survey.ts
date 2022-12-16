@@ -116,6 +116,8 @@ const router: Router = Router();
  *                $ref: '#/components/schemas/Survey'
  *                
  */
+
+/* OBTENER TODAS LAS ENCUESTAS */
 router.get('/surveys',getSurveys);
 /**
  * 
@@ -141,10 +143,8 @@ router.get('/surveys',getSurveys);
  *              $ref: '#/components/schemas/SurveyNotFound'
  */
 
-/**
- * Validamos que exista que el id que viene como parametro sea un id de mongo valido
- * Validamos que el id que viene como parametro exista
- */
+
+/* OBTENER UNA ENCUESTA POR ID  */
 router.get('/survey/:id',[
   check('id','Is not a valid ID').isMongoId(),
   check('id').custom(existMongoId),
@@ -152,6 +152,7 @@ router.get('/survey/:id',[
 ],getSurvey);
 
 
+/* OBTENER UNA PREGUNTA DE UNA ENCUESTA */
 router.get('/survey/:idSurvey/:idQuestion',[
   check('idSurvey','Is not a valid ID').isMongoId(),
   check('idSurvey').custom(existMongoId),
@@ -159,7 +160,7 @@ router.get('/survey/:idSurvey/:idQuestion',[
   validateFields
 ],getSurveyQuestion);
 
-
+/* ELIMINAR UNA PREGUNTA DE UNA ENCUESTA */
 router.delete('/survey/:idSurvey/:idQuestion',[
   check('idSurvey','Is not a valid ID').isMongoId(),
   check('idSurvey').custom(existMongoId),
@@ -189,6 +190,8 @@ router.delete('/survey/:idSurvey/:idQuestion',[
  *      500:
  *        description: Server error
  */
+
+/* CREAR UNA ENCUESTA */
 router.post('/survey',[
   check('titleSurvey').custom(titleSurveyUn),
   check('titleSurvey','titleSurvey is required')
@@ -231,12 +234,15 @@ router.post('/survey',[
  *            schema:
  *              $ref: '#/components/schemas/SurveyNotFound'
  */
+
+/* ACTUALIZAR UNA ENCUESTA */
 router.put('/survey/:id',[
   check('id','Is not a valid ID').isMongoId(),
   check('id').custom(existMongoId),
   validateFields
 ],updateSurvey);
 
+/* ACTUALIZAR UNA PREGUNTA DE UNA ENCUESTA */
 router.put('/sub-question/:id/:idQuestion',[
   check('id','Is not a valid ID').isMongoId(),
   check('id').custom(existMongoId),
@@ -245,6 +251,7 @@ router.put('/sub-question/:id/:idQuestion',[
 ],updateSubQuestion);
 
 
+/* ACTUALIZAR LAS OPCIONES DE UNA PREGUNTA QUE PERTENECE A UNA ENCUESTA */
 router.put('/question/option/:id/:idQuestion',[
   check('id','Is not a valid ID').isMongoId(),
   check('id').custom(existMongoId),
@@ -275,12 +282,15 @@ router.put('/question/option/:id/:idQuestion',[
  *              $ref: '#/components/schemas/SurveyNotFound'
  * 
  */
+
+/* ELIMINAR UNA ENCUESTA */
 router.delete('/survey/:id',[
   check('id','Is not a valid ID').isMongoId(),
   check('id').custom(existMongoId),
   validateFields
 ],deleteSurvey);
 
+/* AGREGAR UNA PREGUNTA A UNA ENCUESTA */
 router.put('/push-question/:idSurvey',[
   check('idSurvey','Is not a valid ID').isMongoId(),
   check('idSurvey').custom(existMongoId),
