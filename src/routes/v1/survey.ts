@@ -18,6 +18,7 @@ import {
 import { validateFields } from '../../middlewares/validateFields';
 import { titleSurveyUn } from '../../helpers/fieldQuestUnique';
 import { deleteQuestion } from '../../controllers/surveyController';
+import { existMongoId } from '../../helpers/validId';
 
 const router: Router = Router();
 
@@ -139,9 +140,32 @@ router.get('/surveys',getSurveys);
  *            schema:
  *              $ref: '#/components/schemas/SurveyNotFound'
  */
-router.get('/survey/:id', getSurvey);
-router.get('/survey/:idSurvey/:idQuestion',getSurveyQuestion)
-router.delete('/survey/:idSurvey/:idQuestion',deleteQuestion)
+
+/**
+ * Validamos que exista que el id que viene como parametro sea un id de mongo valido
+ * Validamos que el id que viene como parametro exista
+ */
+router.get('/survey/:id',[
+  check('id','Is not a valid ID').isMongoId(),
+  check('id').custom(existMongoId),
+  validateFields
+],getSurvey);
+
+
+router.get('/survey/:idSurvey/:idQuestion',[
+  check('idSurvey','Is not a valid ID').isMongoId(),
+  check('idSurvey').custom(existMongoId),
+  check('idQuestion', 'Is not a valid ID').isMongoId(),
+  validateFields
+],getSurveyQuestion);
+
+
+router.delete('/survey/:idSurvey/:idQuestion',[
+  check('idSurvey','Is not a valid ID').isMongoId(),
+  check('idSurvey').custom(existMongoId),
+  check('idQuestion','Is not a valid ID').isMongoId(),
+  validateFields
+],deleteQuestion)
 
 /**
  * @swagger
@@ -174,8 +198,10 @@ router.post('/survey',[
   check('question.*.titleQuestion','titleQuestion is required')
     .not().isEmpty(),
   check('question.*.typeQuestion','typeQuestion is required')
-    .not().isEmpty()
-],validateFields,addSurvey);
+    .not().isEmpty(),
+
+  validateFields
+],addSurvey);
 
 /**
  * @swagger
@@ -205,9 +231,27 @@ router.post('/survey',[
  *            schema:
  *              $ref: '#/components/schemas/SurveyNotFound'
  */
-router.put('/survey/:id', updateSurvey);
-router.put('/sub-question/:id/:idQuestion',updateSubQuestion);
-router.put('/question/option/:id/:idQuestion',updateSubQuestionOption);
+router.put('/survey/:id',[
+  check('id','Is not a valid ID').isMongoId(),
+  check('id').custom(existMongoId),
+  validateFields
+],updateSurvey);
+
+router.put('/sub-question/:id/:idQuestion',[
+  check('id','Is not a valid ID').isMongoId(),
+  check('id').custom(existMongoId),
+  check('idQuestion','Is not a valid ID').isMongoId(),
+  validateFields
+],updateSubQuestion);
+
+
+router.put('/question/option/:id/:idQuestion',[
+  check('id','Is not a valid ID').isMongoId(),
+  check('id').custom(existMongoId),
+  check('idQuestion','Is not a valid ID').isMongoId(),
+  validateFields
+],updateSubQuestionOption);
+
 /**
  * @swagger
  * /survey/{id}:
@@ -231,8 +275,19 @@ router.put('/question/option/:id/:idQuestion',updateSubQuestionOption);
  *              $ref: '#/components/schemas/SurveyNotFound'
  * 
  */
-router.delete('/survey/:id', deleteSurvey);
-router.put('/push-question/:idElement',pushQuestion);
+router.delete('/survey/:id',[
+  check('id','Is not a valid ID').isMongoId(),
+  check('id').custom(existMongoId),
+  validateFields
+],deleteSurvey);
+
+router.put('/push-question/:idSurvey',[
+  check('idSurvey','Is not a valid ID').isMongoId(),
+  check('idSurvey').custom(existMongoId),
+  validateFields
+],pushQuestion);
+
+/* ESTA RUTA ES DE PRUEBA... */
 router.delete('/survey',deleteAllSurvey);
 
 export default router;
