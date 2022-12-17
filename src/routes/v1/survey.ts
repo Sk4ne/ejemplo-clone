@@ -79,9 +79,17 @@ const router: Router = Router();
  *      properties:
  *        message:
  *          type: string
- *          description: a messsage for the not found task
+ *          description: a messsage for the not found survey
  *      example:
- *       message: Survey was not found      
+ *       message: Survey was not found 
+ *    QuestionNotFound:
+ *      type: object
+ *      properties:
+ *        message:
+ *          type: string
+ *          description: a message for the not found question 
+ *      example:
+ *        message: Question was not found
  *  parameters:
  *    surveyId:
  *      in: path
@@ -90,6 +98,20 @@ const router: Router = Router();
  *      schema:
  *        type: string
  *      description: Id from survey
+ *    surveyID:
+ *        in: path
+ *        name: idSurvey
+ *        required: true
+ *        schema:
+ *          type: string  
+ *        description: Id from Survey
+ *    questionID: 
+ *        in: path
+ *        name: idQuestion
+ *        required: true
+ *        schema:
+ *          type: string
+ *        description: Id from Question  
  */
 
 /**
@@ -151,7 +173,37 @@ router.get('/survey/:id',[
   validateFields
 ],getSurvey);
 
-
+/**
+ * 
+ * @swagger
+ * /survey/{idSurvey}/{idQuestion}:
+ *  get:
+ *    summary: Get a question from a survey
+ *    tags: [Surveys]
+ *    parameters:
+ *      - $ref: '#/components/parameters/surveyID'
+ *      - $ref: '#/components/parameters/questionID'
+ *    responses:
+ *      200:
+ *        description: Question was found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Survey'
+ *      404:
+ *        description: Dont exist question with this ID 
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Survey'
+ *      500:
+ *        description: Server error
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/QuestionNotFound'
+ * 
+ */
 /* OBTENER UNA PREGUNTA DE UNA ENCUESTA */
 router.get('/survey/:idSurvey/:idQuestion',[
   check('idSurvey','Is not a valid ID').isMongoId(),
@@ -160,6 +212,29 @@ router.get('/survey/:idSurvey/:idQuestion',[
   validateFields
 ],getSurveyQuestion);
 
+/**
+ * @swagger 
+ * /survey/{idSurvey}/{idQuestion}:
+ *  delete:
+ *    summary: Delete a question from a survey
+ *    tags: [Surveys]
+ *    parameters:
+ *      - $ref: '#/components/parameters/surveyID'
+ *      - $ref: '#/components/parameters/questionID'
+ *    responses:
+ *      200:
+ *        description: Delete a question from a survey
+ *        content:  
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/Schemas/Survey'
+ *      500:
+ *        description: Server error
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/QuestionNotFound' 
+ */
 /* ELIMINAR UNA PREGUNTA DE UNA ENCUESTA */
 router.delete('/survey/:idSurvey/:idQuestion',[
   check('idSurvey','Is not a valid ID').isMongoId(),
@@ -242,7 +317,42 @@ router.put('/survey/:id',[
   validateFields
 ],updateSurvey);
 
-/* ACTUALIZAR UNA PREGUNTA DE UNA ENCUESTA */
+/**
+ * @swagger 
+ * /sub-question/{id}/{idQuestion}:
+ *  put:
+ *    summary: Update a question from a survey (Answer a question)
+ *    tags: [Surveys]
+ *    parameters:
+ *      - $ref: '#/components/parameters/surveyId'
+ *      - $ref: '#/components/parameters/questionID'
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/Survey'
+ *    responses:
+ *      200:
+ *        description: Question was found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Survey'
+ *      404:
+ *        description: Dont exist question with this ID
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Survey'
+ *      500:
+ *        description: Server error
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/QuestionNotFound' 
+ */
+/* ACTUALIZAR UNA PREGUNTA DE UNA ENCUESTA (responder la pregunta) */
 router.put('/sub-question/:id/:idQuestion',[
   check('id','Is not a valid ID').isMongoId(),
   check('id').custom(existMongoId),
@@ -250,8 +360,43 @@ router.put('/sub-question/:id/:idQuestion',[
   validateFields
 ],updateSubQuestion);
 
-
-/* ACTUALIZAR LAS OPCIONES DE UNA PREGUNTA QUE PERTENECE A UNA ENCUESTA */
+/**
+ * @swagger
+ * /question/option/{id}/{idQuestion}:
+ *  put:
+ *    summary: Actualizar las opciones de una pregunta tipo QUESTION_MULTIPLE
+ *    tags: [Surveys]
+ *    parameters:
+ *      - $ref: '#/components/parameters/surveyId'
+ *      - $ref: '#/components/parameters/questionID'
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/Survey'
+ *    responses:
+ *      200:
+ *        description: Question was found
+ *        content: 
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Survey'
+ *      404:
+ *        description: Dont exist question with this ID
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Survey'    
+ *      500:
+ *        description: Server error
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/QuestionNotFound'
+ *    
+ */   
+/* ACTUALIZAR LAS OPCIONES DE UNA PREGUNTA tipo OPTION_MULTIPLE QUE PERTENECE A UNA ENCUESTA */
 router.put('/question/option/:id/:idQuestion',[
   check('id','Is not a valid ID').isMongoId(),
   check('id').custom(existMongoId),
@@ -269,7 +414,7 @@ router.put('/question/option/:id/:idQuestion',[
  *      - $ref: '#/components/parameters/surveyId'
  *    responses: 
  *      200:
- *        description: Survey fue eliminado exitosamente
+ *        description: Survey was delete succesfully
  *        content:
  *          application/json:
  *            schema:
@@ -290,6 +435,34 @@ router.delete('/survey/:id',[
   validateFields
 ],deleteSurvey);
 
+/**
+ * @swagger
+ * /push-question/{idSurvey}:
+ *  put:
+ *    summary: Add a question to the survey
+ *    tags: [Surveys]
+ *    parameters:
+ *      - $ref: '#/components/parameters/surveyID'
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/Survey'
+ *    responses:
+ *      200:
+ *        description: Question was found
+ *        content: 
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Survey'
+ *      500:
+ *        description: Server error
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/QuestionNotFound'
+ */
 /* AGREGAR UNA PREGUNTA A UNA ENCUESTA */
 router.put('/push-question/:idSurvey',[
   check('idSurvey','Is not a valid ID').isMongoId(),
