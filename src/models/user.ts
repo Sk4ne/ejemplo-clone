@@ -37,6 +37,13 @@ const userSchema = new Schema({
 },{versionKey:false})
 
 userSchema.plugin(uniqueValidator);
+
+
+userSchema.methods.toJSON = function(){
+  const { password, ...user } = this.toObject();
+  return user;
+}
+
 const User = mongoose.model('User',userSchema);
 
 export default User; 
