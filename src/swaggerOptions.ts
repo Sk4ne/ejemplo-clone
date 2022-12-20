@@ -12,5 +12,6 @@ export const options = {
       }
     ]
   },
-  apis:['./src/routes/v1/*.ts']
+  // apis:['./src/routes/v1/*.ts'] swaggerJsDoc
+  apis:['./src/swaggerDoc.ts'] /* JSON */
 }

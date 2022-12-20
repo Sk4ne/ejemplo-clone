@@ -5,7 +5,8 @@ import './db/config'
 /* INTERFAZ GRAFICA DE LA DOCUMENTACION */
 import swaggerUi from 'swagger-ui-express'
 import swaggerJsDoc from 'swagger-jsdoc'
-import { options } from './swaggerOptions'
+// import { options } from './swaggerOptions' ORIGINAL
+import { swaggerConfig } from './swaggerDoc'
 
 
 './middlewares/authGoogle'
@@ -38,11 +39,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 /** jsDocs */
-const specs = swaggerJsDoc(options);
+// const specs = swaggerJsDoc(options) ORIGINAL;
+
 /** Middlewares router */
 app.use('/v1',router);
 /**swagger */
-app.use('/v1/docs',swaggerUi.serve,swaggerUi.setup(specs));
+// app.use('/v1/docs',swaggerUi.serve,swaggerUi.setup(specs)) ORIGINAL;
+
+app.use('/v1/docs',swaggerUi.serve,swaggerUi.setup(swaggerConfig));
+
+
 
 app.use(express.static('public'));
 const history = require('connect-history-api-fallback');
