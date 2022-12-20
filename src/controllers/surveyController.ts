@@ -276,7 +276,7 @@ export const deleteSurvey = async (req: Request, res: Response, next: NextFuncti
     let { id } = req.params;
     await Survey.findByIdAndDelete({_id: id});
     res.status(200).json({
-      message: 'Question deleted'
+      message: 'Survey deleted'
     })
   } catch (err) {
     res.status(500).json({
