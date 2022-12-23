@@ -46,10 +46,13 @@ export const getUser = async(req:Request, res: Response, next: NextFunction) =>{
     let { id } = req.params
     const userID  = await User.findById(id);
     if(!userID){
-      res.status(404).json({msg:"user don't exist"})
-    }else{
-      res.status(200).json({userID});  
+      res.status(404).json({
+        msg:`Dont exist user with this ID ${id}`
+      })
     }
+    return res.status(200).json({
+      userID
+    })
   } catch (err) {
     res.status(500).json({
       message: ` An error ocurred ${err}`  
@@ -209,7 +212,7 @@ export const logoutFacebook = async(req:Request,res:Response,next:NextFunction)=
 
 export const googleSuccess = async(req:Request,res:Response,next:NextFunction)=>{
   try {
-    res.status(200).json({
+    return res.status(200).json({
       msg: 'login google ok...',
       user: req.user 
     })
