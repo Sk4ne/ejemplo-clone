@@ -5,10 +5,9 @@
   "main": "index.js",
   "scripts": {
     "__start": "babel-node index.js --exec",
-    "__test":"cross-env NODE_ENV=production babel-node dist/index --exec",
-    "start": "babel-node dist/index --exec",
+    "start": "cross-env NODE_ENV=production babel-node dist/index --exec",
     "watch": "tsc --watch",
-    "dev": "nodemon dist/index.js --exec babel-node"
+    "dev": "cross-env NODE_ENV=development nodemon dist/index.js --exec babel-node"
   },
   "keywords": [],
   "author": "",

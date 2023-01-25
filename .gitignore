@@ -1,5 +1,4 @@
 node_modules/
-dist/
 loginSocialNotes.md 
 .env
 src/routes/v1/test.ts 
