@@ -195,9 +195,24 @@ export const updateSubQuestion = async (req: Request, res: Response, next: NextF
          subQuestionUpdated = await Survey.updateOne(
           {"_id": id},{$set: {"question.$[answ].answerM.answer": answerMultiple}},{arrayFilters:[{"answ._id": idQuestion}]})
       }
+
+       // ! ESTE BLOQUE DE CODIGO Y EL QUE ESTA EN LA OPCION_ABIERTA SE ESTA REPITIENDO - OJO -Refactorizarlo mas adelante
+       /* CREAR UN SERVICIO QUE ME PERMITA ACTUALIZAR EL TITULO DE LA PREGUNTA - NEW ADD 3 ABRIL - 2023 */
+       let { titleQuestion } = req.body;
+       let questionUpdate: any;
+       if (verifyQuestionUndefined!== undefined) {
+         questionUpdate = await Survey.updateOne(
+           {_id:id,'question._id':idQuestion},
+           {$set:{'question.$.titleQuestion': titleQuestion}}
+         )
+         // console.log(questionUpdate)
+       }
+       /* </CREAR UN SERVICIO QUE ME PERMITA ACTUALIZAR EL TITULO DE LA PREGUNTA - NEW ADD 3 ABRIL - 2023 */
       res.status(200).json({
         message: 'Question updated',
-        subQuestionUpdated
+        subQuestionUpdated,
+         /* new 3 abril 2023*/
+        questionUpdate
       })
     }
     if(typeQuestion === 'QUESTION_OPEN'){
@@ -209,9 +224,24 @@ export const updateSubQuestion = async (req: Request, res: Response, next: NextF
           {$set:{'question.$.answerO':answerOpen}}
         );
       }
+      /* CREAR UN SERVICIO QUE ME PERMITA ACTUALIZAR EL TITULO DE LA PREGUNTA - NEW ADD 3 ABRIL - 2023 */
+      let { titleQuestion } = req.body;
+      let questionUpdate: any;
+      if (verifyQuestionUndefined!== undefined) {
+        questionUpdate = await Survey.updateOne(
+          {_id:id,'question._id':idQuestion},
+          {$set:{'question.$.titleQuestion': titleQuestion}}
+        )
+        // console.log(questionUpdate)
+      }
+
+      // console.log(titleQuestion);
+      /* </CREAR UN SERVICIO QUE ME PERMITA ACTUALIZAR EL TITULO DE LA PREGUNTA - NEW ADD 3 ABRIL - 2023 */
       res.status(200).json({
         message: 'Question updated',
-        subQuestionUpdated
+        subQuestionUpdated,
+        /* new 3 abril 2023*/
+        questionUpdate
       })
     }
 

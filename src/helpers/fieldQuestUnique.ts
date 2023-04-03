@@ -6,3 +6,4 @@ export const titleSurveyUn = async(titleSurvey:string) => {
   	throw new Error(`${ titleS.titleSurvey } is already in use`)
   }
 }
+
