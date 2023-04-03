@@ -1,6 +1,6 @@
 import { Router,Request,Response, NextFunction } from 'express'
 import {validateJwt } from '../../middlewares/validateJwt'
-import { check } from 'express-validator'
+import { check} from 'express-validator'
 /* check() is a middleware used to validate the incoming data as per the fields */
 
 import {
@@ -279,6 +279,12 @@ router.delete('/survey/:idSurvey/:idQuestion',[
 
 /* CREAR UNA ENCUESTA */
 router.post('/survey',[
+  check('question.*.typeQuestion').custom(typeQuestion => {
+    if (typeQuestion!== 'QUESTION_OPEN' && typeQuestion!=='QUESTION_MULTIPLE') {
+      throw new Error(`${typeQuestion} Is not a valid question type. Please choose another type`)
+    }
+    return true; 
+  }),
   check('titleSurvey').custom(titleSurveyUn),
   check('titleSurvey','titleSurvey is required')
     .not().isEmpty(),
@@ -288,7 +294,7 @@ router.post('/survey',[
     .not().isEmpty(),
   check('question.*.typeQuestion','typeQuestion is required')
     .not().isEmpty(),
-
+  
   validateFields
 ],addSurvey);
 

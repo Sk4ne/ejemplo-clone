@@ -256,6 +256,12 @@ router.delete('/survey/:idSurvey/:idQuestion', [
  */
 /* CREAR UNA ENCUESTA */
 router.post('/survey', [
+    (0, express_validator_1.check)('question.*.typeQuestion').custom(typeQuestion => {
+        if (typeQuestion !== 'QUESTION_OPEN' && typeQuestion !== 'QUESTION_MULTIPLE') {
+            throw new Error(`${typeQuestion} Is not a valid question type. Please choose another type`);
+        }
+        return true;
+    }),
     (0, express_validator_1.check)('titleSurvey').custom(fieldQuestUnique_1.titleSurveyUn),
     (0, express_validator_1.check)('titleSurvey', 'titleSurvey is required')
         .not().isEmpty(),
