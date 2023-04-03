@@ -31,8 +31,14 @@ const mongoose_unique_validator_1 = __importDefault(require("mongoose-unique-val
 /* enum */
 const validTypeQuestion = {
     values: ['QUESTION_OPEN', 'QUESTION_MULTIPLE'],
-    message: '{ VALUE } is not a type question valid'
+    message: '{VALUE} is not a type question valid'
 };
+/* NUEVO */
+var typeQuestionValid;
+(function (typeQuestionValid) {
+    typeQuestionValid["open"] = "QUESTION_OPEN";
+    typeQuestionValid["multiple"] = "QUESTION_MULTIPLE";
+})(typeQuestionValid || (typeQuestionValid = {}));
 const surveySchema = new mongoose_1.Schema({
     titleSurvey: { type: String },
     description: { type: String },
@@ -42,7 +48,11 @@ const surveySchema = new mongoose_1.Schema({
             },
             typeQuestion: {
                 type: String,
-                enum: validTypeQuestion,
+                // enum: validTypeQuestion, ORIGINAL
+                // enum: {
+                //   values: ['QUESTION_MULTIPLE','QUESTION_OPEN'],
+                //   message: '{VALUE} is not a valid question type'
+                // }
             },
             answerO: { type: String, default: '' },
             answerM: {
