@@ -4,7 +4,13 @@ import uniqueValidator from 'mongoose-unique-validator';
 /* enum */
 const validTypeQuestion = {
   values: ['QUESTION_OPEN','QUESTION_MULTIPLE'],
-  message: '{ VALUE } is not a type question valid'
+  message: '{VALUE} is not a type question valid'
+}
+
+/* NUEVO */
+enum typeQuestionValid {
+  open = 'QUESTION_OPEN',
+  multiple = 'QUESTION_MULTIPLE' 
 }
 
 interface Survey extends mongoose.Document{
@@ -14,6 +20,7 @@ interface Survey extends mongoose.Document{
      _id: any;
      titleQuestion: string;
      typeQuestion: string;
+    //  typeQuestion: {type: string, enum: typeQuestionValid};
     //  answer: string;
      answerO: string;
     //  answerM: string[]
@@ -37,7 +44,12 @@ const surveySchema = new Schema({
     },
     typeQuestion: {
       type:String, 
-      enum: validTypeQuestion,
+      // enum: validTypeQuestion, ORIGINAL
+      // enum: {
+      //   values: ['QUESTION_MULTIPLE','QUESTION_OPEN'],
+      //   message: '{VALUE} is not a valid question type'
+      // }
+      
     },
     answerO: { type:String,default:''},
     answerM: {   
