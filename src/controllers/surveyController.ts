@@ -136,9 +136,12 @@ export const pushQuestion = async (req: Request, res: Response, next: NextFuncti
       return res.status(200).json(questionPush);
     }
   } catch (err) {
+    // res.status(500).json({
+    //   err
+    //   // message: ` An error ocurred ${err}`
+    // })
     res.status(500).json({
-      err
-      // message: ` An error ocurred ${err}`
+      message: `An error ocurred ${err}`
     })
     next(err);
   }

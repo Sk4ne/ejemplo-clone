@@ -143,9 +143,12 @@ const pushQuestion = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         }
     }
     catch (err) {
+        // res.status(500).json({
+        //   err
+        //   // message: ` An error ocurred ${err}`
+        // })
         res.status(500).json({
-            err
-            // message: ` An error ocurred ${err}`
+            message: `An error ocurred ${err}`
         });
         next(err);
     }
