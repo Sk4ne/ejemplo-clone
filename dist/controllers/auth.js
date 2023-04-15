@@ -23,7 +23,7 @@ const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
         const user = yield user_1.default.findOne({ email });
         if (!user) {
             return res.status(400).json({
-                msg: 'Email or Password are incorrect'
+                msg: 'El correo o la contrasena son incorrectos!'
             });
         }
         /** Verify state user */
@@ -36,11 +36,12 @@ const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
         const validPass = bcryptjs_1.default.compareSync(password, user.password);
         if (!validPass) {
             return res.status(400).json({
-                msg: 'Password incorrect'
+                msg: 'El correo o la contrasena son incorrectos!'
             });
         }
         /** Generar JWT */
-        const token = yield (0, generateJwt_1.generateJWT)(user.id);
+        // const token = await generateJWT(user.id);
+        const token = yield (0, generateJwt_1.generateJWT)(user.id, user.name, user.email);
         res.json({
             user,
             token
