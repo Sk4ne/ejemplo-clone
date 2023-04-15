@@ -10,7 +10,7 @@ export const login = async (req: Request, res: Response,next:NextFunction) => {
       const user:any  = await User.findOne({email}); 
       if(!user) {
         return res.status(400).json({
-          msg:'Email or Password are incorrect'
+          msg:'El correo o la contrasena son incorrectos!'
         });
       }
       /** Verify state user */
@@ -23,12 +23,12 @@ export const login = async (req: Request, res: Response,next:NextFunction) => {
      const validPass:boolean = bcrypt.compareSync(password, user.password);
      if(!validPass){
         return res.status(400).json({
-          msg:'Password incorrect'
+          msg:'El correo o la contrasena son incorrectos!'
         })
      }
     /** Generar JWT */
-
-    const token = await generateJWT(user.id);
+    // const token = await generateJWT(user.id);
+    const token = await generateJWT(user.id,user.name,user.email);
     res.json({
       user,
       token 
