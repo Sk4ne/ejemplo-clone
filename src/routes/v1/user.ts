@@ -75,7 +75,12 @@ router.put('/user/:id', storage.single('img'),[
 /** This route is use to send one link to email user to restore password */
 router.post('/restore-password',restorePassword) 
 /** This route is use to add new password */
-router.post('/password-reset/:idUser',[
+/* ADD ABRIL 19 - EN LA API QUE TENGO DE REFERENCIA SE PASA EL TOKEN como un string autogenerado sin fecha de expiracion */
+/* router.post('/password-reset/:idUser',[
+  check('idUser','Is not a valid ID').isMongoId(),
+  validateFields
+],changePassword) */
+router.post('/password-reset/:idUser/:token',[
   check('idUser','Is not a valid ID').isMongoId(),
   validateFields
 ],changePassword)
