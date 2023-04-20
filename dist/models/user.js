@@ -55,6 +55,7 @@ const userSchema = new mongoose_1.Schema({
     }, */
     facebook: { type: Boolean, default: false },
     google: { type: Boolean, default: false },
+    securityToken: { type: String },
     createAt: { type: Date, default: Date.now() },
     state: { type: Boolean, default: true },
 }, { versionKey: false });

@@ -16,6 +16,8 @@ interface User extends mongoose.Document {
   /* services: { facebok?:boolean;google?:boolean}; */
   facebook?:boolean;
   google?:boolean;
+  /* reset token */
+  securityToken:string;
   createAt: Date;
   state: boolean
 }
@@ -32,6 +34,7 @@ const userSchema = new Schema({
   }, */
   facebook: {type: Boolean, default:false},
   google: {type: Boolean, default:false},
+  securityToken: {type:String},
   createAt: {type:  Date, default: Date.now()},
   state:  {type:  Boolean, default: true},
 },{versionKey:false})
