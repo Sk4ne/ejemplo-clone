@@ -19,6 +19,7 @@ const multerConfig_1 = require("../../middlewares/multerConfig");
 const userController_1 = require("../../controllers/userController");
 const restorePass_1 = require("../../helpers/restorePass");
 const validId_1 = require("../../helpers/validId");
+const changePasswordUser_1 = require("../../helpers/changePasswordUser");
 const router = (0, express_1.Router)();
 /**
  * validateJwt - Verify that a token is included in the request.
@@ -34,6 +35,9 @@ router.get('/user/:id', [
 ], userController_1.getUser);
 // CREAR UN USUARIO
 router.post('/user', multerConfig_1.storage.single('img'), [
+    (0, express_validator_1.check)('name')
+        .notEmpty()
+        .withMessage('El nombre es requerido!!'),
     (0, express_validator_1.check)('email')
         .custom(existEmailUser_1.existEmail),
     (0, express_validator_1.check)('email', 'Email is not valid')
@@ -52,6 +56,14 @@ router.put('/user/:id', multerConfig_1.storage.single('img'), [
     (0, express_validator_1.check)('id').custom(validId_1.existMongoIdUser),
     validateFields_1.validateFields
 ], userController_1.updateUser);
+// + CAMBIAR CONTRASENA
+router.put('/change-password/:id', [
+    (0, express_validator_1.check)('newPassword')
+        .custom(regexPass_1.validPass)
+        .isLength({ min: 5 })
+        .withMessage('La contrasena debe tener mas de 5 caracteres'),
+    validateFields_1.validateFields
+], changePasswordUser_1.changePasswordUser);
 /** This route is use to send one link to email user to restore password */
 router.post('/restore-password', restorePass_1.restorePassword);
 /** This route is use to add new password */
@@ -62,6 +74,10 @@ router.post('/restore-password', restorePass_1.restorePassword);
 ],changePassword) */
 router.post('/password-reset/:idUser/:token', [
     (0, express_validator_1.check)('idUser', 'Is not a valid ID').isMongoId(),
+    (0, express_validator_1.check)('password')
+        .custom(regexPass_1.validPass)
+        .isLength({ min: 5 })
+        .withMessage('La contrasena debe tener mas de 5 caracteres'),
     validateFields_1.validateFields
 ], restorePass_1.changePassword);
 // ELIMINAR UN USUARIO

@@ -32,6 +32,7 @@ import {
 } from '../../controllers/userController';
 import { changePassword, restorePassword } from '../../helpers/restorePass';
 import { existMongoIdUser } from '../../helpers/validId';
+import { changePasswordUser } from '../../helpers/changePasswordUser';
 
 const router: Router = Router();
 
@@ -51,6 +52,9 @@ router.get('/user/:id',[
 
 // CREAR UN USUARIO
 router.post('/user',storage.single('img'),[
+  check('name')
+    .notEmpty()
+    .withMessage('El nombre es requerido!!'),
   check('email')
     .custom(existEmail),
   check('email','Email is not valid')
@@ -72,6 +76,15 @@ router.put('/user/:id', storage.single('img'),[
   validateFields
 ],updateUser)
 
+// + CAMBIAR CONTRASENA
+router.put('/change-password/:id',[
+  check('newPassword')
+  .custom(validPass)
+  .isLength({ min: 5})
+  .withMessage('La contrasena debe tener mas de 5 caracteres'),
+  validateFields
+],changePasswordUser)
+
 /** This route is use to send one link to email user to restore password */
 router.post('/restore-password',restorePassword) 
 /** This route is use to add new password */
@@ -82,6 +95,10 @@ router.post('/restore-password',restorePassword)
 ],changePassword) */
 router.post('/password-reset/:idUser/:token',[
   check('idUser','Is not a valid ID').isMongoId(),
+  check('password')
+    .custom(validPass)
+    .isLength({ min: 5})
+    .withMessage('La contrasena debe tener mas de 5 caracteres'),
   validateFields
 ],changePassword)
 
