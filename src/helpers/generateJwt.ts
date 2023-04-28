@@ -9,7 +9,7 @@ export const generateJWT = (id:string | Types.ObjectId= '', name?:string, email?
       //  const payload = { id };
        const payload = { id,name,email };
        jwt.sign(payload,process.env.SECRET_OR_PRIVATE_KEY as string,{
-         expiresIn: '10d'
+         expiresIn: '1d'
        },(err,token)=>{
           if(err){
             console.log(err);

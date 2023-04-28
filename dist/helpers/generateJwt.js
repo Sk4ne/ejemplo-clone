@@ -13,7 +13,7 @@ const generateJWT = (id = '', name, email) => {
         //  const payload = { id };
         const payload = { id, name, email };
         jsonwebtoken_1.default.sign(payload, process.env.SECRET_OR_PRIVATE_KEY, {
-            expiresIn: '10d'
+            expiresIn: '1d'
         }, (err, token) => {
             if (err) {
                 console.log(err);
