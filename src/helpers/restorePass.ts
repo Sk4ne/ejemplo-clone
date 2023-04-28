@@ -26,26 +26,18 @@ export const restorePassword = async(req:Request,res:Response,next:NextFunction)
   try {
 
     let user:UserReturnDb | null = await User.findOne({email:req.body.email});
-    /* console.log('USER',user)
-    console.log('UserEmail',user?.email) */
-
-    /* NEW ABRIL 16 2023 Pasar el token en el link para reestablecer contrasena */
-    // let token = jwt.sign(user?,process.env.SECRET_OR_PRIVATE_KEY as string,{ expiresIn: '10M'})
     let payload = { id:user?._id };
-    let token = jwt.sign(payload,process.env.SECRET_OR_PRIVATE_KEY as string, {expiresIn:'5M'});
-    // console.log(token);
+    /* PASAR UN TOKEN RANDON POR RAZONES DE SEGURIDAD */
+    let token = jwt.sign({data: 'lycaon'},process.env.SECRET_OR_PRIVATE_KEY as string,{expiresIn: '10M'});
+    let decode:any = await jwt.verify(token,process.env.SECRET_OR_PRIVATE_KEY as string);
+    
     if(!user?.email || user?.email == ''){
       return res.status(404).send("Don't exist and user with this email in the database");
-    }
-    /* new 16 abril 2023 */
-    if (!token) {
-      return res.status(404).send('No existe el token / o expiro');
     }
     let link = `${process.env.BASE_URL}/password-reset/${user._id}/${token}`
     user.securityToken = await token;
     /* Save securityToken in database */
     let sav: string = await user.save();
-    // console.log(user.securityToken)
     // console.log(token) 
     let transporter = nodemailer.createTransport({
       host: process.env.BASE_URL,
@@ -61,8 +53,7 @@ export const restorePassword = async(req:Request,res:Response,next:NextFunction)
       from: `"Survey S.A.S 👻" <${process.env.EMAIL_FROM}>`,
       to: user.email,
       subject: 'Survey S.A.S',
-      text: "Hello world?", // plain text body
-      // <a href="${link}" style='background-color:blue;color:white;padding:20px;font-size:18px'>Change Password</a>
+      text: "Hello world?",
       html: //html
       `
         <h3>
@@ -82,6 +73,9 @@ export const restorePassword = async(req:Request,res:Response,next:NextFunction)
           });
     })
   } catch (err) {
+    res.status(401).json({
+      msg: 'ALGUN ERROR OCURRIO!!!'
+    })
     next(err);
   }
 }
@@ -91,10 +85,15 @@ export const changePassword = async(req:Request,res:Response,next:NextFunction) 
     // const user: UserReturnDb | null = await User.findById(req.params.idUser);
     const user: any = await User.findById(req.params.idUser);
     /* VERIFICAR SI EL TOKEN ES VALIDO O EXPIRO */
+
     const unixTimestamp = 1620000000;
+    const dateNow = Date.now() / 1000
+    console.log(`date now: ${dateNow}`)
     let decoded:any =  jwt.verify(user.securityToken,process.env.SECRET_OR_PRIVATE_KEY as string)
-    if (!(user && decoded.exp <= moment.unix(unixTimestamp))) {
-      return res.status(401).send('Invalid link or token expired')
+    console.log(`TOKEN EXPIRES: ${decoded.exp}`)
+    // if (!(user && decoded.exp <= moment.unix(unixTimestamp))) {
+    if ( !user || decoded.exp < Date.now() / 1000) {
+      return res.status(401).json('Invalid link or token expired')
     }
     /** La contraseña que encuentra en el objeto user hay que reeemplazarla por la nueva contraseña
      * que el usuario ingresa en el body.
@@ -107,6 +106,9 @@ export const changePassword = async(req:Request,res:Response,next:NextFunction) 
       msg: 'Password update successfully'
     })
   } catch (err) {
+    res.status(401).json({
+      msg: 'El link para reestablecer la contrasena expiro recuerde que solo tiene 5 minutos para realizar este proceso.!!!'
+    })
     next(err);
   }
 }
