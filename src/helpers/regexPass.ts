@@ -9,6 +9,7 @@ export const validPass = async( password ='' ) => {
     let character = /[!"#$%&'()*+,\-./:;<=>?@^_`{|}]+/;
     
     if( (mayus.test(password) && minus.test(password) && digito.test(password) && character.test(password) ) !=true){
-      throw new Error(`Password must be contain one uppercase and lowercase letter one digito and one special character`);
+      // throw new Error(`Password must be contain one uppercase and lowercase letter one digito and one special character`);
+      throw new Error(`La contrasena debe contener al menos una letra minuscula, una mayuscula un digito y un caracter especial`);
     }
 }
