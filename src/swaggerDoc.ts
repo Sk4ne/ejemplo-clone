@@ -12,7 +12,8 @@ export const swaggerConfig = {
   servers:[
     {
       // url:'http://localhost:3000/v1'
-      url:'https://survey-production.up.railway.app/v1'
+      // url:'https://survey-production.up.railway.app/v1' 
+      url:'https://survey-sk4ne.vercel.app/v1'
     }
   ],
   tags: [
