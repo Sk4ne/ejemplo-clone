@@ -35,11 +35,12 @@ app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 /** jsDocs */
 // const specs = swaggerJsDoc(options) ORIGINAL;
+const swaggerUrl = 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.18.3/swagger-ui.min.css';
 /** Middlewares router */
 app.use('/v1', v1_1.default);
 /**swagger */
 // app.use('/v1/docs',swaggerUi.serve,swaggerUi.setup(specs)) ORIGINAL;
-app.use('/v1/docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerDoc_1.swaggerConfig));
+app.use('/v1/docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerDoc_1.swaggerConfig, { customCssUrl: swaggerUrl }));
 app.use(express_1.default.static('public'));
 const history = require('connect-history-api-fallback');
 app.use(history());

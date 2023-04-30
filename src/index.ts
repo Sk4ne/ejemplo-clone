@@ -40,13 +40,13 @@ app.use(express.urlencoded({ extended: true }));
 
 /** jsDocs */
 // const specs = swaggerJsDoc(options) ORIGINAL;
-
+const swaggerUrl = 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.18.3/swagger-ui.min.css'
 /** Middlewares router */
 app.use('/v1',router);
 /**swagger */
 // app.use('/v1/docs',swaggerUi.serve,swaggerUi.setup(specs)) ORIGINAL;
 
-app.use('/v1/docs',swaggerUi.serve,swaggerUi.setup(swaggerConfig));
+app.use('/v1/docs',swaggerUi.serve,swaggerUi.setup(swaggerConfig,{customCssUrl: swaggerUrl}));
 
 
 
