@@ -7,17 +7,21 @@ Esta es una API que permite generar encuestas, mediante el uso de preguntas abie
 * `Api - Cloudinary` para la el almacenamiento de imagenes - el crud completo, subida, edición, eliminación y actualización.
 * `Postman` para testear los EndPoints y general la documentación automática de la API.
 * `TypeScript` para añadir tipado, y construir una api más robusta y con un código más facil de mantener.
-* `Passport.js` para la autenticación con redes sociales como facebook. 
+* `Passport.js` para la autenticación con redes sociales como facebook y google. 
 * `Swagger` para documentar la API
 * `jest y supertest` para hacer el testing de la API.
 * `express-validator` para validar la data y que que cumpla con ciertos paramametros, por ejemplo que una contraseña contenga cierto tipo de caracteres. 
-* `Railway` para hacer el deploy de la API
+* `Railway` y `Vercel` para hacer el deploy de la API 
 
 ### Consideraciones
 Esta api esta en fase de desarrollo,cada vez que tengo tiempo libre agrego nuevas funcionalidades y/o realizo optimizaciones en el código fuente.  
 
 ### Retos
 * Tuve dificultades para implementar la autenticación con redes sociales (Facebook y Google), el código que estaba escribiendo no era capaz de identificar con que red social se estaba logueando el usuario. Afortunadamente existe buena documentación sobre Passport-facebook y google-facebook y puede implementar una solución viable. 
+
+## Configuración
+
+Para ejecutar esta ApiRest necesitarás tener instalado NodeJS en tu sistema. Tambien necesitarás una base de datos MongoDB local o en la Nube. La api tambien requiere algunas variables de entorno, para configurarlas revisa el archivo `.env.example`
 
 Despues de descargar el proyecto...
 
@@ -32,4 +36,11 @@ Para reconstruir los módulos de nodejs.
 
 ```
  npm run watch
+```
+
+## Demo
+Tengo una pequena demo escrita en vue2, que consume esta apiRest esta disponible en el siguiente enlace
+
+```js
+https://survey-sk4ne.netlify.app/
 ```
