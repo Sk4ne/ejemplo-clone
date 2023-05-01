@@ -4,7 +4,7 @@ exports.swaggerConfig = void 0;
 exports.swaggerConfig = {
     openapi: "3.0.0",
     info: {
-        title: 'Survey API EDITED!!!!!!',
+        title: 'Survey API',
         version: '1.0.0',
         description: 'Esta API llamada survey permite generan encuestas por medio de preguntas abierta y/o cerradas y a su vez descargarlas en formato pdf.',
         contact: {
@@ -15,7 +15,6 @@ exports.swaggerConfig = {
     servers: [
         {
             // url:'http://localhost:3000/v1'
-            // url:'https://survey-production.up.railway.app/v1' 
             url: 'https://survey-sk4ne.vercel.app/v1'
         }
     ],
