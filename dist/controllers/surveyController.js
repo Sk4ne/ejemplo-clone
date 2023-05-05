@@ -104,7 +104,8 @@ const pushQuestion = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         let respOpen = preg[0]['answerO'];
         let tituloPregunta = preg[0]['titleQuestion'];
         if (!(tipoPregunta === 'QUESTION_OPEN' || tipoPregunta === 'QUESTION_MULTIPLE')) {
-            return res.status(404).json({ msg: `${tipoPregunta} is not valid ddsdfdf :)` });
+            // return res.status(404).json({msg:`${tipoPregunta} is not valid ddsdfdf :)`});
+            return res.status(404).json({ msg: `Por favor escoja un tipo de pregunta valido!!` });
         }
         if (tipoPregunta === 'QUESTION_OPEN') {
             yield survey_1.default.updateOne({ _id: idElement }, {

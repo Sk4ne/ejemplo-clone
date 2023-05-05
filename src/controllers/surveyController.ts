@@ -94,7 +94,8 @@ export const pushQuestion = async (req: Request, res: Response, next: NextFuncti
     let tituloPregunta:string = preg[0]['titleQuestion'];
 
     if( !(tipoPregunta === 'QUESTION_OPEN' || tipoPregunta === 'QUESTION_MULTIPLE'  )){
-      return res.status(404).json({msg:`${tipoPregunta} is not valid ddsdfdf :)`});
+      // return res.status(404).json({msg:`${tipoPregunta} is not valid ddsdfdf :)`});
+      return res.status(404).json({msg:`Por favor escoja un tipo de pregunta valido!!`});
     }
     if(tipoPregunta === 'QUESTION_OPEN'){
       await Survey.updateOne(
