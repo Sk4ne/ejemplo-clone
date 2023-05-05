@@ -490,6 +490,8 @@ router.delete('/survey/:id',[
 router.put('/push-question/:idSurvey',[
   check('idSurvey','Is not a valid ID').isMongoId(),
   check('idSurvey').custom(existMongoId),
+  check('question.*.titleQuestion','El titulo de la pregunta es requerido!!!')
+    .not().isEmpty(),
   validateFields
 ],validateJwt,pushQuestion);
 

@@ -458,6 +458,8 @@ router.delete('/survey/:id', [
 router.put('/push-question/:idSurvey', [
     (0, express_validator_1.check)('idSurvey', 'Is not a valid ID').isMongoId(),
     (0, express_validator_1.check)('idSurvey').custom(validId_1.existMongoId),
+    (0, express_validator_1.check)('question.*.titleQuestion', 'El titulo de la pregunta es requerido!!!')
+        .not().isEmpty(),
     validateFields_1.validateFields
 ], validateJwt_1.validateJwt, surveyController_1.pushQuestion);
 /* ESTA RUTA ES DE PRUEBA... */
