@@ -300,7 +300,8 @@ router.post('/survey',[
     .not().isEmpty(),
   check('question.*.typeQuestion','typeQuestion is required')
     .not().isEmpty(),
-  
+  check('user','User is required')
+    .not().isEmpty(),
   validateFields
 ],validateJwt,addSurvey);
 
