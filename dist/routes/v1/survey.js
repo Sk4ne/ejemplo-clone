@@ -276,6 +276,8 @@ router.post('/survey', [
         .not().isEmpty(),
     (0, express_validator_1.check)('question.*.typeQuestion', 'typeQuestion is required')
         .not().isEmpty(),
+    (0, express_validator_1.check)('user', 'User is required')
+        .not().isEmpty(),
     validateFields_1.validateFields
 ], validateJwt_1.validateJwt, surveyController_1.addSurvey);
 /**

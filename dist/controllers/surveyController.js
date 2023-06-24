@@ -37,7 +37,8 @@ const addSurvey = (req, res, next) => __awaiter(void 0, void 0, void 0, function
 exports.addSurvey = addSurvey;
 const getSurveys = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const surveys = yield survey_1.default.find({});
+        const surveys = yield survey_1.default.find({})
+            .populate('user', { name: 1, email: 1 });
         res.status(200).json(surveys);
     }
     catch (err) {

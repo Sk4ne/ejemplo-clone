@@ -14,14 +14,16 @@ const swaggerDoc_1 = require("./swaggerDoc");
 './middlewares/authGoogle';
 './middlewares/authFacebook';
 const passport_1 = __importDefault(require("passport"));
+const cors_1 = __importDefault(require("cors"));
 const express_1 = __importDefault(require("express"));
 const morgan_1 = __importDefault(require("morgan"));
-const cors_1 = __importDefault(require("cors"));
 const cookie_session_1 = __importDefault(require("cookie-session"));
+const app = (0, express_1.default)();
+app.use((0, cors_1.default)({ origin: 'http://localhost:8080' }));
 /** routes v1 */
 const v1_1 = __importDefault(require("./routes/v1"));
 './middlewares/isLoggedIn';
-const app = (0, express_1.default)();
+// const app = express();
 app.use((0, cookie_session_1.default)({
     name: process.env.NAME_COOKIE,
     keys: ['key1', 'key2']
@@ -29,7 +31,7 @@ app.use((0, cookie_session_1.default)({
 app.use(passport_1.default.initialize());
 app.use(passport_1.default.session());
 app.use((0, morgan_1.default)('tiny'));
-app.use((0, cors_1.default)());
+// app.use(cors());
 app.use(express_1.default.json());
 /**application/x-www-form-urlencoded */
 app.use(express_1.default.urlencoded({ extended: true }));

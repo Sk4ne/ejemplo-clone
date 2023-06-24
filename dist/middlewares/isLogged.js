@@ -11,13 +11,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.isLoggedIn = void 0;
 const isLoggedIn = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    if (req.isAuthenticated()) {
+    // CODE ORIGINAL
+    /* if (req.isAuthenticated()){
+      // next();
+      // console.log(req.isAuthenticated())
+      
+      return next()
+    }else{
+      res.status(401).json({
+        msg: 'Not Logged In'
+      });
+    } */
+    if (req.user) {
         next();
     }
     else {
-        res.status(401).json({
-            msg: 'Not Logged In'
-        });
+        res.status(401).send('Not Logged In');
     }
 });
 exports.isLoggedIn = isLoggedIn;

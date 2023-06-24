@@ -206,6 +206,7 @@ const facebookSuccess = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
             msg: 'Login ok facebook',
             user: req.user
         });
+        // res.redirect(`http://localhost:8080/encuesta`);
     }
     catch (err) {
         res.status(500).json({
