@@ -1,5 +1,6 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Schema, Types } from 'mongoose';
 import uniqueValidator from 'mongoose-unique-validator';
+import { ObjectId } from 'mongoose';
 
 /* enum */
 const validTypeQuestion = {
@@ -20,18 +21,15 @@ interface Survey extends mongoose.Document{
      _id: any;
      titleQuestion: string;
      typeQuestion: string;
-    //  typeQuestion: {type: string, enum: typeQuestionValid};
-    //  answer: string;
      answerO: string;
-    //  answerM: string[]
     answerM: {
       options:string[],
-      /* La respuesta es cualquiera de las opciones que se encuentra en el array options */
       answer: {type:string, default:''}
     }
    }],
+   /* New Data */
+   user: Types.ObjectId,
    createAt: Date;
-  //  createAt: Date;
    state:boolean;
 }
 
@@ -44,12 +42,6 @@ const surveySchema = new Schema({
     },
     typeQuestion: {
       type:String, 
-      // enum: validTypeQuestion, ORIGINAL
-      // enum: {
-      //   values: ['QUESTION_MULTIPLE','QUESTION_OPEN'],
-      //   message: '{VALUE} is not a valid question type'
-      // }
-      
     },
     answerO: { type:String,default:''},
     answerM: {   
@@ -57,8 +49,7 @@ const surveySchema = new Schema({
       answer: {type:String, default:''} 
     }
   }],
-  /* DATE FORMAT */
-  // createAt:{ type:String,default: new Date().toLocaleString('es-CO')},
+  user: {type: Schema.Types.ObjectId,ref:'User'},
   createAt:{ type:Date,default: Date.now()},
   state:{ type:Boolean, default:true}
 },{versionKey:false}); 
@@ -67,10 +58,5 @@ const surveySchema = new Schema({
 /* Apply the uniqueValidator plugin to nameSchema */
 surveySchema.plugin(uniqueValidator);
 const Survey = mongoose.model<Survey>('Question',surveySchema);
-
-/* Apply the uniqueValidator plugin to surveySchema 
-surveySchema.plugin(uniqueValidator, {message: 'Error, expected {PATH} to be unique'});
-*/
-
 
 export default Survey;
