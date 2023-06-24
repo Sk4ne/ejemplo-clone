@@ -28,7 +28,9 @@ export const addSurvey = async (req: Request, res: Response, next: NextFunction)
 
 export const getSurveys = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const surveys = await Survey.find({});
+    const surveys = await Survey.find({})
+      .populate('user',{name:1,email:1})
+
     res.status(200).json(surveys);
   } catch (err) {
     res.status(500).json({
