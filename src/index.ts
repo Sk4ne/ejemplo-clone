@@ -13,16 +13,18 @@ import { swaggerConfig } from './swaggerDoc'
 './middlewares/authFacebook'
 
 import passport from 'passport'
+import cors from 'cors'
 import express from 'express'
 import morgan from 'morgan'
-import cors from 'cors'
 import session from 'cookie-session'
 
+const app = express()
+app.use(cors({origin:'http://localhost:8080'}));
 /** routes v1 */
 import router from './routes/v1'
 './middlewares/isLoggedIn'
 
-const app = express();
+// const app = express();
 app.use(session({
   name: process.env.NAME_COOKIE,
   keys: ['key1','key2']
@@ -32,7 +34,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(morgan('tiny'));
-app.use(cors());
+// app.use(cors());
 app.use(express.json());
 
 /**application/x-www-form-urlencoded */
