@@ -186,6 +186,8 @@ export const facebookSuccess = async(req:Request,res:Response,next:NextFunction)
       msg:'Login ok facebook',
       user: req.user 
     })
+
+    // res.redirect(`http://localhost:8080/encuesta`);
   } catch (err) {
     res.status(500).json({
       message: `An error ocurred ${err}`
